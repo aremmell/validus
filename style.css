@@ -1,0 +1,7 @@
+//
+// CSS Style sheet for
+// http://ryan.ript.net/Validus/index.html
+//
+p.hdr { font-family: "Calibri"; font-weight: 700; font-size: large }
+p.txt { font-family: "Calibri"; font-size: medium }
+p.footer { font-family: "Calibri"; font-size: medium; color: silver; text-align: center }
