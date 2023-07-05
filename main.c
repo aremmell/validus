@@ -27,7 +27,7 @@
 
 #include "validus.h"
 #include "validuslibrary.h"
-#include "version.h"
+#include <version.h>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -86,8 +86,8 @@ int printusage(void)
 int printversion(void)
 {
     printf("validus v%" PRIu16 ".%" PRIu16 ".%" PRIu16 "-%s\n",
-        get_version_major(), get_version_minor(), get_version_build(),
-        get_version_notes());
+        VERSION_MAJ, VERSION_MIN, VERSION_BLD,
+        GIT_COMMIT_HASH);
 
     return 0;
 }

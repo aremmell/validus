@@ -31,11 +31,10 @@ execute_process(
     COMMAND_ERROR_IS_FATAL ANY
 )
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/__version.o
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/__version.S
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/__version.bin
-    COMMAND mkverobj -maj ${PROJECT_VERSION_MAJOR} -min ${PROJECT_VERSION_MINOR} -b ${PROJECT_VERSION_PATCH} -n ${GIT_COMMIT_HASH} -o ${CMAKE_CURRENT_BINARY_DIR}/__version
+configure_file(
+    version.h.in
+    include/version.h
+    NEWLINE_STYLE LF
 )
 
 add_executable(
@@ -43,16 +42,13 @@ add_executable(
     validus.c
     validuslibrary.c
     main.c
-    ${CMAKE_CURRENT_BINARY_DIR}/__version.o
-    ${CMAKE_CURRENT_BINARY_DIR}/__version.S
-    ${CMAKE_CURRENT_BINARY_DIR}/__version.bin
 )
 
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
     .
-    .
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 target_compile_features(
