@@ -90,10 +90,8 @@ int printversion(void)
 int hashfile(const char *file)
 {
     validus_state state = {0};
-    if (!validus_hash_file(&state, file)) {
-        fprintf(stderr, "validus: Unable to hash file '%s'!\n", file);
+    if (!validus_hash_file(&state, file))
         return EXIT_FAILURE;
-    }
 
     printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
         file, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
@@ -175,18 +173,18 @@ int testsuite(void)
         "dlrow ,olleh"
     };
 
-    uint32_t word = 0xABCD1234;
-    uint8_t fb    = *((uint8_t*)&word);
-	if (fb == 0xAB)
-		printf("\n=== Endianess detection: Big endian (fb = %" PRIx8 ") ===\n", fb);
-	else
-		printf("\n=== Endianess detection: Little endian (fb = %" PRIx8 ") ===\n", fb);
-
     for (n = 0; n < 8; ++n) {
         validus_hash_string(&state, test_inputs[n]);
-        printf("validus [\"%s\"] = %08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"\n",
+        printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
             test_inputs[n], state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
     }
 
+    uint8_t membuf[10] = {
+        0xfe, 0xaa, 0x10, 0x00, 0x50, 0xe6, 0x03, 0x33, 0x44, 0x59
+    };
+
+    validus_hash_mem(&state, membuf, sizeof(membuf));
+        printf("validus [membuf] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+            state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
     return EXIT_SUCCESS;
 }

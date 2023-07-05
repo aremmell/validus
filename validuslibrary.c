@@ -55,7 +55,7 @@ bool validus_hash_file(validus_state* state, const char* file) {
 
     FILE *f = fopen(file, "rb");
     if (!f) {
-        fprintf(stderr, "failed to open file '%s': %s", file,
+        fprintf(stderr, "failed to open file '%s': %s\n", file,
             strerror(errno));
         return false;
     }
@@ -64,7 +64,7 @@ bool validus_hash_file(validus_state* state, const char* file) {
         VALIDUS_FILEBLOCKSIZE);
 
     if (!buf) {
-        fprintf(stderr, "failed to allocate %zu octets of heap memory: %s",
+        fprintf(stderr, "failed to allocate %zu octets of heap memory: %s\n",
             sizeof(validus_octet) * VALIDUS_FILEBLOCKSIZE, strerror(errno));
         fclose(f);
         f = NULL;
@@ -78,11 +78,8 @@ bool validus_hash_file(validus_state* state, const char* file) {
         size_t result = fread((void*)buf, sizeof(validus_octet),
             VALIDUS_FILEBLOCKSIZE, f);
 
-        if (0 != result) {
+        if (0 != result)
             validus_append(state, buf, result);
-#pragma message("TODO: Don't think this memset is necessary.")
-            memset(buf, 0, VALIDUS_FILEBLOCKSIZE);
-        }
     }
 
     if (0 != ferror(f)) {
