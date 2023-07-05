@@ -1,99 +1,77 @@
 /*
- *  ValidusLibrary.h : Implementation of the Validus hash function
- *  library functions
+ * validuslibrary.h
  *
- *  Copyright 2003-2013 - All Rights Reserved
+ * Author:    Ryan M. Lederman <lederman@gmail.com>
+ * Copyright: Copyright (c) 2004-2023
+ * Version:   1.0.1
+ * License:   The MIT License (MIT)
  *
- *  Description:
- *    Validus is a one-way hash function that generates 192-bit
- *    fingerprints.  It is computationally infeasible to find
- *    two messages that hash to the same fingerprint value.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
  *
- *  Author:
- *    Ryan Matthew Lederman
- *    lederman@gmail.com
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- *  Date:
- *    March 03, 2004
- *
- *  Version: 1.0.0
- *
- *  License:
- *    This software is provided to the end user "as-is", with no warranty
- *    implied or otherwise.  The author is for all intents and purposes
- *    the owner of this source code.  The author grants the end user the
- *    privilege to use this software in any application, commercial or
- *    otherwise, with the following restrictions:
- *      1.) Mention of the Validus name must be present in any product
- *       implementing this software.
- *      2.) If the end user wishes to modify this source code, he/she must
- *       not distribute the source code as the original source code, and
- *       must clearly document the changes made to the source code in any
- *       distribution of said source code.
- *      3.) This license agreement must always be displayed in any version
- *       of the Validus source code.
- *    The author will not be held liable for ANY damage, loss of data,
- *    loss of income, or any other form of loss that results directly or 
- *    indirectly from the use of this software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+#ifndef _VALIDUS_LIBRARY_H_INCLUDED
+#define _VALIDUS_LIBRARY_H_INCLUDED
 
-#ifndef _VALIDUS_LIBRARY_H
-#define _VALIDUS_LIBRARY_H
-
-#include "Validus.h"
+#include "validus.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <sys/stat.h>
 
-
-/*
- * Constants
- */
 #define VALIDUS_FILEBLOCKSIZE 8192
-
-
-/*
- * Function signatures
- */
-
+#define VALIDUS_MAX_STRING    2048
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 /*
- * Validus_String()
+ * validus_hash_string()
  * Use this function to hash a string
  */
-int Validus_String(validus_t *state, const char *string);
+bool validus_hash_string(validus_state *state, const char *string);
 
 /*
- * Validus_Memory()
+ * validus_hash_mem()
  * Hashes a block of memory
  */
-int Validus_Memory(validus_t *state, const void *mem, validus_int_t size);
+bool validus_hash_mem(validus_state *state, const void *mem, validus_int size);
 
 /*
- * Validus_HashFile()
+ * validus_hash_file()
  * Hashes a file on disk
  */
-int Validus_HashFile(validus_t *state, char *file);
+bool validus_hash_file(validus_state *state, char *file);
 
 /*
- * Validus_FingerprintCompare()
- * Compares two validus_t structures to
+ * validus_compare()
+ * Compares two validus_state structures to
  * verify that they contain identical fingerprint.
  */
-int Validus_FingerprintCompare(const validus_t *one, const validus_t *two);
+bool validus_compare(const validus_state *one, const validus_state *two);
 
 /*
- * Validus_FingerprintToString()
+ * validus_state_to_string()
  * Formats a Validus fingerprint as a string
  * usable for displaying.
  */
-int Validus_FingerprintToString(const validus_t *state, char *out);
+bool validus_state_to_string(const validus_state *state, char *out, size_t len);
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
-#endif /* _VALIDUS_LIBRARY_H */
+#endif /* _VALIDUS_LIBRARY_H_INCLUDED */

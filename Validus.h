@@ -1,87 +1,59 @@
 /*
- *  Validus.h : Implementation of the Validus hash function
+ * validus.h
  *
- *  Copyright 2003-2013 - All Rights Reserved
+ * Author:    Ryan M. Lederman <lederman@gmail.com>
+ * Copyright: Copyright (c) 2004-2023
+ * Version:   1.0.1
+ * License:   The MIT License (MIT)
  *
- *  Description:
- *    Validus is a one-way hash function that generates 192-bit
- *    fingerprints.  It is computationally infeasible to find
- *    two messages that hash to the same fingerprint value.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
  *
- *  Author:
- *    Ryan Matthew Lederman
- *   lederman@gmail.com
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- *  Date:
- *    March 03, 2004
- *
- *  Version: 1.0.0
- *
- *  License:
- *    This software is provided to the end user "as-is", with no warranty
- *    implied or otherwise.  The author is for all intents and purposes
- *    the owner of this source code.  The author grants the end user the
- *    privilege to use this software in any application, commercial or
- *    otherwise, with the following restrictions:
- *      1.) Mention of the Validus name must be present in any product
- *       implementing this software.
- *      2.) If the end user wishes to modify this source code, he/she must
- *       not distribute the source code as the original source code, and
- *       must clearly document the changes made to the source code in any
- *       distribution of said source code.
- *      3.) This license agreement must always be displayed in any version
- *       of the Validus source code.
- *    The author will not be held liable for ANY damage, loss of data,
- *    loss of income, or any other form of loss that results directly or 
- *    indirectly from the use of this software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-#ifndef _VALIDUS_H
-#define _VALIDUS_H
+#ifndef _VALIDUS_H_INCLUDED
+#define _VALIDUS_H_INCLUDED
 
 #include <stdlib.h>
+#include <stdint.h>
+#include <inttypes.h>
 #include <string.h>
 
-/* 
- * CPU Endianness
- */
-#define VALIDUS_ENDIAN_BIG
+typedef uint8_t  validus_octet;
+typedef uint32_t validus_word;
+typedef int32_t  validus_int;
 
 /*
- * Type defines (Change to suit your platform)
- * octet  = 8-bit unsigned integer
- * word   = 32-bit unsigned integer
- * int    = 32-bit signed integer
- */
-typedef unsigned char validus_octet_t;
-typedef unsigned long validus_word_t;
-typedef int           validus_int_t;
-
-/*
- * validus_t : The Validus state;
+ * validus_state : The Validus state;
  * retains fingerprint and length data
  */
 typedef struct {
-  validus_word_t bits[2]; /* 64-bit bit counter */
-  validus_word_t f0;      /* Fingerprint word 1 */
-  validus_word_t f1;      /* Fingerprint word 2 */   
-  validus_word_t f2;      /* Fingerprint word 3 */
-  validus_word_t f3;      /* Fingerprint word 4 */
-  validus_word_t f4;      /* Fingerprint word 5 */
-  validus_word_t f5;      /* Fingerprint word 6 */
-} validus_t;
-
-
-/*
- * Macros
- */
-
+    validus_word bits[2]; /* 64-bit bit counter */
+    validus_word f0;      /* Fingerprint word 1 */
+    validus_word f1;      /* Fingerprint word 2 */
+    validus_word f2;      /* Fingerprint word 3 */
+    validus_word f3;      /* Fingerprint word 4 */
+    validus_word f4;      /* Fingerprint word 5 */
+    validus_word f5;      /* Fingerprint word 6 */
+} validus_state;
 
 /*
  * WORDALIGNED: Boolean function to determine if
  * address [a] is properly aligned on 32-bit memory boundaries
  */
-#define WORDALIGNED(a) (((a - (const validus_word_t *)0) & 0x3) == 0)
+#define WORDALIGNED(a) (((a - (const validus_word *)0) & 0x3) == 0)
 
 /*
  * OCTETSWAP: Swaps octet order of a 32-bit value [b] (represented as octets)
@@ -90,7 +62,7 @@ typedef struct {
 #define OCTETSWAP(a, b) (a = ((b[3] << 24) | (b[2] << 16) | (b[1] << 8) | (b[0])))
 
 /*
- * ROL: Cyclically rotates word [a] by [b] bits to the left 
+ * ROL: Cyclically rotates word [a] by [b] bits to the left
  */
 #define ROL(a, b) (((a) << (b)) | ((a) >> (32 - b)))
 
@@ -102,10 +74,10 @@ typedef struct {
 /*
  * Mixer functions [M0 <-> M3]
  */
-#define M0(a, b, c, d, e) ((((a) & (b)) ^ ((c) & (d) ^ (e))))
-#define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c) & (d) ^ (e))))
-#define M2(a, b, c, d, e) (((a) & ((b) ^ (c)) ^ ~(d) & (e) ^ (c)))
-#define M3(a, b, c, d, e) ((((a) & (b)) ^ (c) & ((d) ^ (e)) ^ (e)))
+#define M0(a, b, c, d, e) ((((a) & (b)) ^ ((c) & (d)  ^ (e))))
+#define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c)  & (d) ^ (e))))
+#define M2(a, b, c, d, e) (((a)  & ((b) ^ (c)) ^ ~(d) & (e) ^ (c)))
+#define M3(a, b, c, d, e) ((((a) & (b)) ^ (c)  & ((d) ^ (e)) ^ (e)))
 
 /*
  * Compression functions
@@ -115,34 +87,28 @@ typedef struct {
  * [hcv]        = VALIDUS_n word
  */
 #define VC_0(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-  register validus_word_t t;\
-  t = a + M0(b, c, d, e, f) + ROL(blk + hcv, r1);\
-  a = ROR(t + blk, r2);\
+    register validus_word t;\
+    t = a + M0(b, c, d, e, f) + ROL(blk + hcv, r1);\
+    a = ROR(t + blk, r2);\
 }
 
 #define VC_1(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-  register validus_word_t t;\
-  t = a + M1(b, c, d, e, f) + ROL(blk + hcv, r1);\
-  a = ROR(t + blk, r2);\
+    register validus_word t;\
+    t = a + M1(b, c, d, e, f) + ROL(blk + hcv, r1);\
+    a = ROR(t + blk, r2);\
 }
 
 #define VC_2(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-  register validus_word_t t;\
-  t = a + M2(b, c, d, e, f) + ROL(blk + hcv, r1);\
-  a = ROR(t + blk, r2);\
+    register validus_word t;\
+    t = a + M2(b, c, d, e, f) + ROL(blk + hcv, r1);\
+    a = ROR(t + blk, r2);\
 }
 
 #define VC_3(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-  register validus_word_t t;\
-  t = a + M3(b, c, d, e, f) + ROL(blk + hcv, r1);\
-  a = ROR(t + blk, r2);\
+    register validus_word t;\
+    t = a + M3(b, c, d, e, f) + ROL(blk + hcv, r1);\
+    a = ROR(t + blk, r2);\
 }
-
-
-/*
- * Constants
- */
-
 
 /*
  * Initial fingerprint values
@@ -350,42 +316,30 @@ typedef struct {
 #define VALIDUS_190     0x991D4C51
 #define VALIDUS_191     0x885588BD
 
-
-/* 
- * Procedures
- */
-
-
-#ifdef __cplusplus
-  extern "C" {
+#if defined(__cplusplus)
+extern "C" {
 #endif
 
 /*
- * External Procedures
+ * validus_init() : Initializes the Validus state
  */
+void validus_init(validus_state *pstate);
 
 /*
- * Validus_Init() : Initializes the Validus state 
+ * validus_finalize() : Finalizes the hash process
  */
-void Validus_Init(validus_t *pstate);
+void validus_finalize(validus_state *pstate);
 
 /*
- * Validus_Finish() : Finalizes the hash process
+ * validus_append() : Processes a block of data
  */
-void Validus_Finish(validus_t *pstate);
+void validus_append(validus_state *pstate, const void *data, validus_word len);
 
-/*
- * Validus_Append() : Processes a block of data
- */
-void Validus_Append(validus_t *pstate, const void *data, validus_word_t len);
+/* Internal use only. */
+void _validus_process(validus_state *pstate, const validus_word *blk32);
 
-/*
- * Internal Procedures
- */
-void _Validus_Process(validus_t *pstate, const validus_word_t *blk32);
-
-#ifdef __cplusplus
-  }
+#if defined(__cplusplus)
+}
 #endif
 
-#endif /* _VALIDUS_H */
+#endif /* !_VALIDUS_H_INCLUDED */
