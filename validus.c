@@ -116,7 +116,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word f = state->f5;
 
 #pragma message("TODO: determine endianness upon startup and store it in state.")
-#ifdef VALIDUS_ENDIAN_BIG
+#if 1 // def VALIDUS_ENDIAN_BIG
 {
     validus_int n;
     validus_word stk[48];
