@@ -177,10 +177,10 @@ build_validus() {
         mkdir -p build/install
 
         # this is clean, configure, then build
-        ${_cmake} --build $(pwd)/build --clean-first --verbose --target clean && \
+        ${_cmake} --build $(pwd)/build --clean-first --target clean && \
         ${_cmake} -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=build/install \
                   --check-system-vars -S$(pwd) -B$(pwd)/build -G Ninja && \
-        ${_cmake} --build $(pwd)/build --clean-first --verbose --target validus
+        ${_cmake} --build $(pwd)/build --clean-first --target validus
     fi
 
     [[ -x "build/validus" ]] && build/validus -x
