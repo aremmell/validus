@@ -38,7 +38,11 @@
 #define VALIDUS_FILEBLOCKSIZE 8192
 #define VALIDUS_MAX_STRING    2048
 
+#if defined(_WIN32)
+# error "no timer implementation"
+#else
 typedef struct timespec validus_timer;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -76,8 +80,10 @@ bool validus_compare(const validus_state *one, const validus_state *two);
  */
 bool validus_state_to_string(const validus_state *state, char *out, size_t len);
 
-void start_timer(validus_timer* timer);
-float timer_elapsed(validus_timer* timer);
+/** timer functions */
+void validus_timer_start(validus_timer* timer);
+float validus_timer_elapsed(validus_timer* timer);
+void validus_get_local_time(const time_t* when, char out[256]);
 
 #ifdef __cplusplus
 }

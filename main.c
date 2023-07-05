@@ -124,39 +124,45 @@ int hashstring(const char *string)
     return 0;
 }
 
-/*
- * timetrial() : Hashes 1GB of data and
- * displays elapsed time and result
- */
 int timetrial(void)
 {
-    validus_octet block[10000];
-    int  i              = 0;
-    float bps           = 0.0f;
-    float mbs           = 0.0f;
-    time_t elapsed      = 0;
-    time_t start        = 0;
-    time_t end          = 0;
-    validus_state state = {0};
+    static const size_t blocks = (size_t)1e6;
+    static const size_t block_size = (size_t)1e5;
 
-    printf("Validus speed test: processing 100000 10000-byte blocks... ");
+    validus_octet block[block_size];
+    char timebuf[256] = {0};
+
+    validus_timer timer = {0};
+    time_t now;
+    time(&now);
+    validus_get_local_time(&now, timebuf);
+
+    printf("Validus speed test: (begin at %s); processing %zu %zu-byte blocks (%zu GB)... ",
+        timebuf, blocks, block_size, (blocks * block_size) / 1000 / 1000 / 1000);
     fflush(stdout);
 
-    time(&start);
+    validus_state state = {0};
+
+    validus_timer_start(&timer);
     validus_init(&state);
 
-    for (i = 100000; i >= 0; i--)
-        validus_append(&state, block, 10000);
+    for (size_t i = blocks; i > 0; i--)
+        validus_append(&state, block, block_size);
 
     validus_finalize(&state);
-    time(&end);
 
-    elapsed = end - start;
-    bps     = ((10000.0f * 100000.0f) / (float)elapsed);
-    mbs     = (((float)bps / 1024.0f) / 1024.0f);
+    float elapsed_msec = validus_timer_elapsed(&timer);
+    float bps = ((float)block_size * (float)blocks) / (elapsed_msec / 1000.0f);
+    float mbs = (bps / 1000.0f) / 1000.0f;
 
-    printf("done.\nFingerprint = %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\nTime = %ld seconds\nSpeed = %.02f MiB/sec (%.02f bytes/sec)\n",
-        state.f0, state.f1, state.f2, state.f3, state.f4, state.f5, elapsed,mbs, bps);
+    time(&now);
+    validus_get_local_time(&now, timebuf);
+
+    printf("done (end at %s).\n"
+           "Elapsed: %.03f seconds\n"
+           "Throughput: %.2f MB/sec\n"
+           "Fingerprint = %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\n",
+           timebuf, (elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
     return 0;
 }

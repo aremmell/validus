@@ -157,19 +157,34 @@ bool validus_state_to_string(const validus_state* state, char* out, size_t len)
     return -1 != print;
 }
 
-void start_timer(validus_timer* timer)
+void validus_timer_start(validus_timer* timer)
 {
-#if defined(_WIN32)
-# error "no timer implemented"
-#else
     int ret = clock_gettime(CLOCK_REALTIME, timer);
     if (0 != ret) {
-        fprintf(stderr, "Failed to start timer! %s", strerror(errno));
+        fprintf(stderr, "clock_gettime() failed: %s", strerror(errno));
+        timer->tv_nsec = 0;
+        timer->tv_nsec = 0;
     }
-#endif
 }
 
-float timer_elapsed(validus_timer* timer)
+float validus_timer_elapsed(validus_timer* timer)
 {
+    validus_timer now;
 
+    int ret = clock_gettime(CLOCK_REALTIME, &now);
+    if (0 != ret) {
+        fprintf(stderr, "clock_gettime() failed: %s", strerror(errno));
+        return 0.0f;
+    }
+
+    /* milliseconds */
+    return (float)((now.tv_sec * 1e3) + (now.tv_nsec / 1e6) - (timer->tv_sec * 1e3) +
+            (timer->tv_nsec / 1e6));
+}
+
+void validus_get_local_time(const time_t* when, char out[256])
+{
+    struct tm* lt = localtime(when);
+    if (lt)
+        strftime(out, 256, "%x %T (%z)", lt);
 }
