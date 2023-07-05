@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"validus.h": "c",
+			"validuslibrary.h": "c"
+		}
+	}
+}

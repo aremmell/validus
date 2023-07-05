@@ -28,11 +28,17 @@
 
 #include "validus.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <sys/stat.h>
+#include <inttypes.h>
+#include <string.h>
+#include <errno.h>
+#include <time.h>
 
 #define VALIDUS_FILEBLOCKSIZE 8192
 #define VALIDUS_MAX_STRING    2048
+
+typedef struct timespec validus_timer;
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,19 +48,19 @@ extern "C" {
  * validus_hash_string()
  * Use this function to hash a string
  */
-bool validus_hash_string(validus_state *state, const char *string);
+bool validus_hash_string(validus_state* state, const char* string);
 
 /*
  * validus_hash_mem()
  * Hashes a block of memory
  */
-bool validus_hash_mem(validus_state *state, const void *mem, validus_int size);
+bool validus_hash_mem(validus_state* state, const void* mem, validus_word len);
 
 /*
  * validus_hash_file()
  * Hashes a file on disk
  */
-bool validus_hash_file(validus_state *state, char *file);
+bool validus_hash_file(validus_state *state, const char *file);
 
 /*
  * validus_compare()
@@ -69,6 +75,9 @@ bool validus_compare(const validus_state *one, const validus_state *two);
  * usable for displaying.
  */
 bool validus_state_to_string(const validus_state *state, char *out, size_t len);
+
+void start_timer(validus_timer* timer);
+float timer_elapsed(validus_timer* timer);
 
 #ifdef __cplusplus
 }

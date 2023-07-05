@@ -24,6 +24,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #include "validus.h"
+#include <stdlib.h>
+#include <inttypes.h>
+#include <string.h>
 
 /*
  * FUNCTION: validus_append()
@@ -34,20 +37,23 @@
  * ARGUMENTS: Pointer to a Validus state, pointer to the data
  * to be processed, and the length of the data in octets.
  */
-void validus_append(validus_state *pstate, const void *data, validus_word len)
+void validus_append(validus_state* state, const void* data, validus_word len)
 {
+    if (!state || !data || len == 0)
+        return;
+
     const validus_word *ptr = (validus_word *)data;
     validus_word left       = 0;
     validus_word done       = 0;
 
-    pstate->bits[1] += (len >> 29);
+    state->bits[1] += (len >> 29);
 
-    if (((pstate->bits[0] += (len << 3)) < (len << 3)))
-        pstate->bits[1]++;
+    if (((state->bits[0] += (len << 3)) < (len << 3)))
+        state->bits[1]++;
 
     while ((left = (len - done))) {
         if (left > 191) {
-            _validus_process(pstate, ptr);
+            _validus_process(state, ptr);
             done += 192;
             ptr  += 48;
         } else {
@@ -55,7 +61,7 @@ void validus_append(validus_state *pstate, const void *data, validus_word len)
 
             memcpy(stk, ptr, left);
             memset(((validus_octet *)stk) + left, 0, 192 - left);
-            _validus_process(pstate, stk);
+            _validus_process(state, stk);
             done += left;
         }
     }
@@ -73,21 +79,25 @@ void validus_append(validus_state *pstate, const void *data, validus_word len)
  * NOTES: This function is used internally; you should never
  * call this function directly
  */
-void _validus_process(validus_state *pstate, const validus_word *blk32)
+void _validus_process(validus_state* state, const validus_word* blk32)
 {
-    validus_word a = pstate->f0;
-    validus_word b = pstate->f1;
-    validus_word c = pstate->f2;
-    validus_word d = pstate->f3;
-    validus_word e = pstate->f4;
-    validus_word f = pstate->f5;
+    if (!state || !blk32)
+        return;
+
+    validus_word a = state->f0;
+    validus_word b = state->f1;
+    validus_word c = state->f2;
+    validus_word d = state->f3;
+    validus_word e = state->f4;
+    validus_word f = state->f5;
 
 #ifdef VALIDUS_ENDIAN_BIG
 {
     validus_int n;
     validus_word stk[48];
 
-    for(n = 47; n >= 0; n--) { OCTETSWAP(stk[n], ((validus_octet *)&blk32[n])); }
+    for(n = 47; n >= 0; n--)
+        OCTETSWAP(stk[n], ((validus_octet *)&blk32[n]));
 
     blk32 = stk;
 }
@@ -297,12 +307,12 @@ void _validus_process(validus_state *pstate, const validus_word *blk32)
     VC_3(f, e, d, c, b, a, 23, 26, blk32[ 2], VALIDUS_190);
     VC_3(e, d, c, b, a, f, 29, 28, blk32[ 0], VALIDUS_191);
 
-    pstate->f0 += a;
-    pstate->f1 += b;
-    pstate->f2 += c;
-    pstate->f3 += d;
-    pstate->f4 += e;
-    pstate->f5 += f;
+    state->f0 += a;
+    state->f1 += b;
+    state->f2 += c;
+    state->f3 += d;
+    state->f4 += e;
+    state->f5 += f;
 }
 
 /*
@@ -313,15 +323,18 @@ void _validus_process(validus_state *pstate, const validus_word *blk32)
  *
  * ARGUMENTS: Pointer to the Validus state to initialize
  */
-void validus_init(validus_state *pstate)
+void validus_init(validus_state* state)
 {
-    pstate->bits[0] = pstate->bits[1] = 0;
-    pstate->f0 = VALIDUS_INIT_0;
-    pstate->f1 = VALIDUS_INIT_1;
-    pstate->f2 = VALIDUS_INIT_2;
-    pstate->f3 = VALIDUS_INIT_3;
-    pstate->f4 = VALIDUS_INIT_4;
-    pstate->f5 = VALIDUS_INIT_5;
+    if (!state)
+        return;
+
+    state->bits[0] = state->bits[1] = 0;
+    state->f0 = VALIDUS_INIT_0;
+    state->f1 = VALIDUS_INIT_1;
+    state->f2 = VALIDUS_INIT_2;
+    state->f3 = VALIDUS_INIT_3;
+    state->f4 = VALIDUS_INIT_4;
+    state->f5 = VALIDUS_INIT_5;
 }
 
 /*
@@ -332,8 +345,11 @@ void validus_init(validus_state *pstate)
  *
  * ARGUMENTS: Pointer to the Validus state to finalize
  */
-void validus_finalize(validus_state *pstate)
+void validus_finalize(validus_state* state)
 {
+    if (!state)
+        return;
+
     validus_octet finish[192] = {
         0xAA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -352,11 +368,11 @@ void validus_finalize(validus_state *pstate)
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     };
 
-    OCTETSWAP(pstate->bits[1], ((validus_octet *)&pstate->bits[1]));
-    OCTETSWAP(pstate->bits[0], ((validus_octet *)&pstate->bits[0]));
+    OCTETSWAP(state->bits[1], ((validus_octet*)&state->bits[1]));
+    OCTETSWAP(state->bits[0], ((validus_octet*)&state->bits[0]));
 
-    memcpy(&finish[184], &pstate->bits[1], 4);
-    memcpy(&finish[188], &pstate->bits[0], 4);
+    memcpy(&finish[184], &state->bits[1], 4);
+    memcpy(&finish[188], &state->bits[0], 4);
 
-    _validus_process(pstate, (validus_word *)finish);
+    _validus_process(state, (validus_word*)finish);
 }

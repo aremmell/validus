@@ -23,18 +23,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
 
-#include <time.h>
 #include "validus.h"
 #include "validuslibrary.h"
 
 #ifdef _WIN32
 #include <conio.h>
 #else
-#include <curses.h>
+/* #include <curses.h> */
 #include <sys/types.h>
 #endif /* _WIN32 */
 
@@ -47,19 +44,19 @@ int testsuite(void);
 int main(int argc, char *argv[])
 {
     /* Print usage */
-    if (argc < 2 || strcmp(argv[1], "-h") == 0)
+    if (argc < 2 || strncmp(argv[1], "-h", 2) == 0)
         return printusage();
 
     /* Hash string */
-    if (strcmp(argv[1], "-s") == 0)
+    if (strncmp(argv[1], "-s", 2) == 0)
         return hashstring(argv[2]);
 
     /* Time trial */
-    if (strcmp(argv[1], "-t") == 0)
+    if (strncmp(argv[1], "-t", 2) == 0)
         return timetrial();
 
     /* Test suite */
-    if (strcmp(argv[1], "-x") == 0)
+    if (strncmp(argv[1], "-x", 2) == 0)
         return testsuite();
 
     /* Hash file */
@@ -131,41 +128,37 @@ int hashstring(const char *string)
  * timetrial() : Hashes 1GB of data and
  * displays elapsed time and result
  */
-int timetrial(void) {
+int timetrial(void)
+{
+    validus_octet block[10000];
+    int  i              = 0;
+    float bps           = 0.0f;
+    float mbs           = 0.0f;
+    time_t elapsed      = 0;
+    time_t start        = 0;
+    time_t end          = 0;
+    validus_state state = {0};
 
-  validus_octet block[10000];
-  int  i             = 0;
-  float bps          = 0.0f;
-  float mbs          = 0.0f;
-  time_t elapsed     = 0;
-  time_t start       = 0;
-  time_t end         = 0;
-  validus_state state    = {0};
+    printf("Validus speed test: processing 100000 10000-byte blocks... ");
+    fflush(stdout);
 
-  printf("validus speed test - Processing 100000 10000-byte blocks...");
+    time(&start);
+    validus_init(&state);
 
-  fflush(stdout);
+    for (i = 100000; i >= 0; i--)
+        validus_append(&state, block, 10000);
 
-  time(&start);
+    validus_finalize(&state);
+    time(&end);
 
-  validus_init(&state);
+    elapsed = end - start;
+    bps     = ((10000.0f * 100000.0f) / (float)elapsed);
+    mbs     = (((float)bps / 1024.0f) / 1024.0f);
 
-  for (i = 100000; i >= 0; i--) {
-    validus_append(&state, block, 10000);
-  }
+    printf("done.\nFingerprint = %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\nTime = %ld seconds\nSpeed = %.02f MiB/sec (%.02f bytes/sec)\n",
+        state.f0, state.f1, state.f2, state.f3, state.f4, state.f5, elapsed,mbs, bps);
 
-  validus_finalize(&state);
-
-  time(&end);
-
-  elapsed = end - start;
-  bps     = ((10000.0f * 100000.0f) / (float)elapsed);
-  mbs     = (((float)bps / 1024.0f) / 1024.0f);
-
-  printf("done.\nFingerprint = %08x%08x%08x%08x%08x%08x\nTime = %d seconds\nSpeed = %.02f MB/sec (%.02f bytes/sec)\n",
-    state.f0, state.f1, state.f2, state.f3, state.f4, state.f5, elapsed, mbs, bps);
-
-  return 0;
+    return 0;
 }
 
 /*
@@ -173,35 +166,32 @@ int timetrial(void) {
  * and displays result; used to determine
  * if Validus is working correctly
  */
-int testsuite(void) {
+int testsuite(void)
+{
+    validus_state state = {0};
+    int n               = 0;
+    char *test[]        = {
+        "",
+        "abc",
+        "ABC",
+        "validus",
+        "hash function",
+        "testing123",
+        "0123456789",
+        "0987654321"
+    };
 
-  validus_state state = {0};
-  int   n      = 0;
-  char *test[] = {
-    "",
-    "abc",
-    "ABC",
-    "validus",
-    "hash function",
-    "testing123",
-    "0123456789",
-    "0987654321"
-  };
+    for (n = 0; n < 8; ++n) {
+        validus_hash_string(&state, test[n]);
+        printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+            test[n],
+            state.f0,
+            state.f1,
+            state.f2,
+            state.f3,
+            state.f4,
+            state.f5);
+    }
 
-  for (n = 0; n < 8; ++n) {
-
-    validus_hash_string(&state, test[n]);
-
-    printf("validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
-      test[n],
-      state.f0,
-      state.f1,
-      state.f2,
-      state.f3,
-      state.f4,
-      state.f5);
-
-  }
-
-  return 0;
+    return 0;
 }

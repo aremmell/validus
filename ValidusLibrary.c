@@ -32,10 +32,10 @@
  *
  * RETURN VALUE: 0 for success, 1 for failure
  */
-bool validus_hash_string(validus_state *state, const char *string)
+bool validus_hash_string(validus_state* state, const char* string)
 {
     if (!state || (!string || !*string))
-      return false;
+        return false;
 
     validus_init(state);
     validus_append(state, string, strnlen(string, VALIDUS_MAX_STRING));
@@ -44,6 +44,17 @@ bool validus_hash_string(validus_state *state, const char *string)
     return true;
 }
 
+bool validus_hash_mem(validus_state* state, const void* mem, validus_word len)
+{
+    if (!state || !mem || len == 0)
+        return false;
+
+    validus_init(state);
+    validus_append(state, mem, len);
+    validus_finalize(state);
+
+    return true;
+}
 /*
  * FUNCTION: validus_hash_file()
  *
@@ -54,7 +65,7 @@ bool validus_hash_string(validus_state *state, const char *string)
  * NOTES: Change VALIDUS_FILEBLOCKSIZE if you wish to adjust
  * the amount of bytes read per iteration.
  */
-bool validus_hash_file(validus_state *state, const char *file) {
+bool validus_hash_file(validus_state* state, const char* file) {
   if (!state || (!file || !*file))
       return false;
 
@@ -62,8 +73,8 @@ bool validus_hash_file(validus_state *state, const char *file) {
     if (!f)
         return false;
 
-    validus_octet *buf  = (validus_octet *)calloc(sizeof(validus_octet),
-      VALIDUS_FILEBLOCKSIZE);
+    validus_octet *buf  = (validus_octet*)calloc(sizeof(validus_octet),
+        VALIDUS_FILEBLOCKSIZE);
 
     if (!buf) {
         fclose(f);
@@ -71,12 +82,11 @@ bool validus_hash_file(validus_state *state, const char *file) {
         return false;
     }
 
-    bool retval   = false;
-    size_t result = 0;
+    bool retval = false;
     validus_init(state);
 
     while (!feof(f)) {
-        result = fread((void*)buf, 1, VALIDUS_FILEBLOCKSIZE, f);
+        size_t result = fread((void*)buf, sizeof(validus_octet), VALIDUS_FILEBLOCKSIZE, f);
 
         if (0 != result) {
             validus_append(state, buf, result);
@@ -104,14 +114,14 @@ bool validus_hash_file(validus_state *state, const char *file) {
  *
  * RETURN VALUE: 0 if states are identical, 1 otherwise
  */
-bool validus_compare(const validus_state *one, const validus_state *two)
+bool validus_compare(const validus_state* one, const validus_state* two)
 {
-  if (!one || !two)
-    return false;
+    if (!one || !two)
+        return false;
 
-  return (one->f0 == two->f0 && one->f1 == two->f1 &&
-          one->f2 == two->f2 && one->f3 == two->f3 &&
-          one->f4 == two->f4 && one->f5 == two->f5);
+    return (one->f0 == two->f0 && one->f1 == two->f1 &&
+            one->f2 == two->f2 && one->f3 == two->f3 &&
+            one->f4 == two->f4 && one->f5 == two->f5);
 }
 
 /*
@@ -126,20 +136,40 @@ bool validus_compare(const validus_state *one, const validus_state *two)
  * be at least 49 bytes (6 words have the potential to be 48 char
  * acters, plus a null-terminator).
  */
-bool validus_state_to_string(const validus_state *state, char *out, size_t len)
+
+/**
+ * @brief Convertes a validus_state to hexadecimal string form.
+ *
+ * @param   state Pointer to the validus_state to convert.
+ * @param   out   Pointer to a buffer to receive the formatted string.
+ * @param   len   The length of `out` in octets.
+ * @returns bool  `true` if input parameters are valid, and conversion succeeds,
+ *                `false` otherwise.
+ */
+bool validus_state_to_string(const validus_state* state, char* out, size_t len)
 {
     if (!state || !out || len < 49)
         return false;
 
-    return -1 != snprintf(
-                    out,
-                    len,
-                    "%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32,
-                    state->f0,
-                    state->f1,
-                    state->f2,
-                    state->f3,
-                    state->f4,
-                    state->f5
-                  );
+    int print = snprintf(out, len, "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32,
+        state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+
+    return -1 != print;
+}
+
+void start_timer(validus_timer* timer)
+{
+#if defined(_WIN32)
+# error "no timer implemented"
+#else
+    int ret = clock_gettime(CLOCK_REALTIME, timer);
+    if (0 != ret) {
+        fprintf(stderr, "Failed to start timer! %s", strerror(errno));
+    }
+#endif
+}
+
+float timer_elapsed(validus_timer* timer)
+{
+
 }
