@@ -202,7 +202,7 @@ int testsuite(void)
         "dlrow ,olleh"
     };
 
-    uint16_t word = 0xABCD1234;
+    uint32_t word = 0xABCD1234;
 	if (*((uint8_t*)&word) == 0xAB)
 		printf("\n=== Endianess detection: Big endian ===\n");
 	else
