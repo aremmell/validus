@@ -31,8 +31,8 @@
 #include <version.h>
 
 #if defined(_WIN32)
-#include <conio.h>
-#endif /* _WIN32 */
+# include <conio.h>
+#endif
 
 int printusage(void);
 int printversion(void);
@@ -176,10 +176,11 @@ int testsuite(void)
     };
 
     uint32_t word = 0xABCD1234;
-	if (*((uint8_t*)&word) == 0xAB)
-		printf("\n=== Endianess detection: Big endian ===\n");
+    uint8_t fb    = *((uint8_t*)&word);
+	if (fb == 0xAB)
+		printf("\n=== Endianess detection: Big endian (fb = %" PRIx8 ") ===\n", fb);
 	else
-		printf("\n=== Endianess detection: Little endian ===\n");
+		printf("\n=== Endianess detection: Little endian (fb = %" PRIx8 ") ===\n", fb);
 
     for (n = 0; n < 8; ++n) {
         validus_hash_string(&state, test_inputs[n]);
