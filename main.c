@@ -27,6 +27,7 @@
 
 #include "validus.h"
 #include "validuslibrary.h"
+#include "version.h"
 
 #ifdef _WIN32
 #include <conio.h>
@@ -36,6 +37,7 @@
 #endif /* _WIN32 */
 
 int printusage(void);
+int printversion(void);
 int hashfile(const char *file);
 int hashstring(const char *string);
 int timetrial(void);
@@ -59,6 +61,10 @@ int main(int argc, char *argv[])
     if (strncmp(argv[1], "-x", 2) == 0)
         return testsuite();
 
+    /* Version info */
+    if (strncmp(argv[1], "-v", 2) == 0)
+        return printversion();
+
     /* Hash file */
     return hashfile(argv[1]);
 }
@@ -72,6 +78,16 @@ int printusage(void)
     printf("validus -t\t\t: Performs time-trial\n");
     printf("validus -x\t\t: Displays test suite\n");
     printf("validus [file]\t\t: Generates fingerprint for file\n");
+    printf("validus -v\t\tDisplays version information\n");
+
+    return 0;
+}
+
+int printversion(void)
+{
+    printf("validus v%" PRIu16 ".%" PRIu16 ".%" PRIu16 "-%s\n",
+        get_version_major(), get_version_minor(), get_version_build(),
+        get_version_notes());
 
     return 0;
 }
@@ -137,7 +153,7 @@ int timetrial(void)
     time(&now);
     validus_get_local_time(&now, timebuf);
 
-    printf("Validus speed test: (begin at %s); processing %zu %zu-byte blocks (%zu GB)... ",
+    printf("Validus speed test: begin at %s; processing %zu %zu-byte blocks (%zu GB)... ",
         timebuf, blocks, block_size, (blocks * block_size) / 1000 / 1000 / 1000);
     fflush(stdout);
 
@@ -158,12 +174,11 @@ int timetrial(void)
     time(&now);
     validus_get_local_time(&now, timebuf);
 
-    printf("done (end at %s).\n"
+    printf("done; end at %s.\n"
            "Elapsed: %.03f seconds\n"
-           "Throughput: %.2f MB/sec\n"
-           "Fingerprint = %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\n",
+           "Throughput: %.2f MB/s\n"
+           "Hash: %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\n",
            timebuf, (elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
-
     return 0;
 }
 

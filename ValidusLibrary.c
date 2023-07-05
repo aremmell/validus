@@ -186,5 +186,5 @@ void validus_get_local_time(const time_t* when, char out[256])
 {
     struct tm* lt = localtime(when);
     if (lt)
-        strftime(out, 256, "%x %T (%z)", lt);
+        strftime(out, 256, "%T (%z)", lt);
 }
