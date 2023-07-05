@@ -1,209 +1,185 @@
 /*
- *  main.c : Implementation of the Validus hash function console
- *  utility
+ * main.c
  *
- *  Copyright 2003-2013 - All Rights Reserved
+ * Author:    Ryan M. Lederman <lederman@gmail.com>
+ * Copyright: Copyright (c) 2004-2023
+ * Version:   1.0.1
+ * License:   The MIT License (MIT)
  *
- *  Description:
- *    Validus is a one-way hash function that generates 192-bit
- *    fingerprints.  It is computationally infeasible to find
- *    two messages that hash to the same fingerprint value.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
  *
- *  Author:
- *    Ryan Matthew Lederman
- *    lederman@gmail.com
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- *  Date:
- *    March 03, 2004
- *
- *  Version: 1.0.0
- *
- *  License:
- *    This software is provided to the end user "as-is", with no warranty
- *    implied or otherwise.  The author is for all intents and purposes
- *    the owner of this source code.  The author grants the end user the
- *    privilege to use this software in any application, commercial or
- *    otherwise, with the following restrictions:
- *      1.) Mention of the Validus name must be present in any product
- *       implementing this software.
- *      2.) If the end user wishes to modify this source code, he/she must
- *       not distribute the source code as the original source code, and
- *       must clearly document the changes made to the source code in any
- *       distribution of said source code.
- *      3.) This license agreement must always be displayed in any version
- *       of the Validus source code.
- *    The author will not be held liable for ANY damage, loss of data,
- *    loss of income, or any other form of loss that results directly or 
- *    indirectly from the use of this software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
 
-#include <time.h>
-#include "Validus.h"
-#include "ValidusLibrary.h"
+#include "validus.h"
+#include "validuslibrary.h"
+#include <version.h>
 
 #ifdef _WIN32
 #include <conio.h>
 #else
-#include <curses.h>
+/* #include <curses.h> */
 #include <sys/types.h>
 #endif /* _WIN32 */
 
-
-/*
- * Function declarations
- */
-
-
 int printusage(void);
-int hashfile(char *file);
-int hashstring(char *string);
+int printversion(void);
+int hashfile(const char *file);
+int hashstring(const char *string);
 int timetrial(void);
 int testsuite(void);
 
-
-/*
- * main() : Entry point
- */
-int main(int argc, char *argv[]) {
-
-  if (argc < 2 || strcmp(argv[1], "-?") == 0) {
+int main(int argc, char *argv[])
+{
     /* Print usage */
-    return printusage();
-  }
+    if (argc < 2 || strncmp(argv[1], "-h", 2) == 0)
+        return printusage();
 
-  if (strcmp(argv[1], "-s") == 0) {
     /* Hash string */
-    return hashstring(argv[2]);
-  }
+    if (strncmp(argv[1], "-s", 2) == 0)
+        return hashstring(argv[2]);
 
-  if (strcmp(argv[1], "-t") == 0) {
     /* Time trial */
-    return timetrial();
-  }
+    if (strncmp(argv[1], "-t", 2) == 0)
+        return timetrial();
 
-  if (strcmp(argv[1], "-x") == 0) {
     /* Test suite */
-    return testsuite();
-  }
+    if (strncmp(argv[1], "-x", 2) == 0)
+        return testsuite();
 
-  /* Hash file */
-  return hashfile(argv[1]);
+    /* Version info */
+    if (strncmp(argv[1], "-v", 2) == 0)
+        return printversion();
+
+    /* Hash file */
+    return hashfile(argv[1]);
 }
 
 /*
  *printusage() : Displays usage information of this program
  */
-int printusage(void) {
+int printusage(void)
+{
+    printf("validus -s [string]\t: Generates fingerprint for string\n");
+    printf("validus -t\t\t: Performs time-trial\n");
+    printf("validus -x\t\t: Displays test suite\n");
+    printf("validus [file]\t\t: Generates fingerprint for file\n");
+    printf("validus -v\t\tDisplays version information\n");
 
-  printf("Validus -s [string]\t: Generates fingerprint for string\n");
-  printf("Validus -t\t\t: Performs time-trial\n");
-  printf("Validus -x\t\t: Displays test suite\n");
-  printf("Validus [file]\t\t: Generates fingerprint for file\n");
+    return 0;
+}
 
-  return 0;
+int printversion(void)
+{
+    printf("validus v%" PRIu16 ".%" PRIu16 ".%" PRIu16 "-%s\n",
+        VERSION_MAJ, VERSION_MIN, VERSION_BLD,
+        GIT_COMMIT_HASH);
+
+    return 0;
 }
 
 /*
  * hashfile() : Hashes [file] and displays result
  */
-int hashfile(char *file) {
+int hashfile(const char *file)
+{
+    validus_state state = {0};
+    if (0 != validus_hash_file(&state, file)) {
+        printf("validus: Unable to hash file [%s]!\n", file);
+        return 1;
+    }
 
-  validus_t state = {0};
+    printf("validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
+        file,
+        state.f0,
+        state.f1,
+        state.f2,
+        state.f3,
+        state.f4,
+        state.f5);
 
-  if (0 != Validus_HashFile(&state, file)) {
-    printf("Validus: Unable to hash file [%s]!\n", file);
-    return 1;
-  }
-
-  printf("Validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
-      file,
-      state.f0,
-      state.f1,
-      state.f2,
-      state.f3,
-      state.f4,
-      state.f5);
-
-  return 0;
+    return 0;
 }
 
-/* 
+/*
  * hashstring() : Hashes [string] and displays result
  */
-int hashstring(char *string) {
+int hashstring(const char *string)
+{
+    if (!string || !*string) {
+        printf("validus: No string supplied. Quitting.\n");
+        return 1;
+    }
 
-  validus_t state = {0};
+    validus_state state = {0};
+    validus_hash_string(&state, string);
 
-  if (!string || !*string) {
-    printf("Validus: No string supplied. Quitting.\n");
-    return 1;
-  }
+    printf("validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
+        string,
+        state.f0,
+        state.f1,
+        state.f2,
+        state.f3,
+        state.f4,
+        state.f5);
 
-  Validus_String(&state, string);
-
-  printf("Validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
-      string,
-      state.f0,
-      state.f1,
-      state.f2,
-      state.f3,
-      state.f4,
-      state.f5);
-
-  return 0;
+    return 0;
 }
 
-/* 
- * timetrial() : Hashes 1GB of data and
- * displays elapsed time and result
- */
-int timetrial(void) {
+int timetrial(void)
+{
+    static const size_t blocks = (size_t)1e6;
+    static const size_t block_size = (size_t)1e5;
 
-  validus_octet_t block[10000];
-  int  i             = 0;
-  float bps          = 0.0f;
-  float mbs          = 0.0f;
-  time_t elapsed     = 0;
-  time_t start       = 0;
-  time_t end         = 0;
-  validus_t state    = {0};
+    validus_octet block[block_size];
+    char timebuf[256] = {0};
 
-  printf("Validus speed test - Processing 100000 10000-byte blocks...");
+    validus_timer timer = {0};
+    time_t now;
+    time(&now);
+    validus_get_local_time(&now, timebuf);
 
-  fflush(stdout);
+    printf("Validus speed test: begin at %s; processing %zu %zu-byte blocks (%zu GB)... ",
+        timebuf, blocks, block_size, (blocks * block_size) / 1000 / 1000 / 1000);
+    fflush(stdout);
 
-  time(&start);
+    validus_state state = {0};
 
-  Validus_Init(&state);
+    validus_timer_start(&timer);
+    validus_init(&state);
 
-  for (i = 100000; i >= 0; i--) {
-    Validus_Append(&state, block, 10000);
-  }
+    for (size_t i = blocks; i > 0; i--)
+        validus_append(&state, block, block_size);
 
-  Validus_Finish(&state);
+    validus_finalize(&state);
 
-  time(&end);
+    float elapsed_msec = validus_timer_elapsed(&timer);
+    float bps = ((float)block_size * (float)blocks) / (elapsed_msec / 1000.0f);
+    float mbs = (bps / 1000.0f) / 1000.0f;
 
-  elapsed = end - start;
-  bps     = ((10000.0f * 100000.0f) / (float)elapsed);
-  mbs     = (((float)bps / 1024.0f) / 1024.0f);
+    time(&now);
+    validus_get_local_time(&now, timebuf);
 
-  printf("done.\nFingerprint = %08x%08x%08x%08x%08x%08x\nTime = %d seconds\nSpeed = %.02f MB/sec (%.02f bytes/sec)\n",
-    state.f0,
-    state.f1,
-    state.f2,
-    state.f3,
-    state.f4,
-    state.f5,
-    elapsed,
-    mbs,
-    bps);
-
-  return 0;
+    printf("done; end at %s.\n"
+           "Elapsed: %.03f seconds\n"
+           "Throughput: %.2f MB/s\n"
+           "Hash: %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\n",
+           timebuf, (elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
+    return 0;
 }
 
 /*
@@ -211,35 +187,32 @@ int timetrial(void) {
  * and displays result; used to determine
  * if Validus is working correctly
  */
-int testsuite(void) {
+int testsuite(void)
+{
+    validus_state state = {0};
+    int n               = 0;
+    char *test[]        = {
+        "",
+        "abc",
+        "ABC",
+        "validus",
+        "hash function",
+        "testing123",
+        "0123456789",
+        "0987654321"
+    };
 
-  validus_t state = {0};
-  int   n      = 0;
-  char *test[] = {
-    "", 
-    "abc",
-    "ABC",
-    "validus",
-    "hash function", 
-    "testing123",
-    "0123456789",
-    "0987654321"
-  };
+    for (n = 0; n < 8; ++n) {
+        validus_hash_string(&state, test[n]);
+        printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+            test[n],
+            state.f0,
+            state.f1,
+            state.f2,
+            state.f3,
+            state.f4,
+            state.f5);
+    }
 
-  for (n = 0; n < 8; ++n) {
-
-    Validus_String(&state, test[n]);
-
-    printf("validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
-      test[n],
-      state.f0,
-      state.f1,
-      state.f2,
-      state.f3,
-      state.f4,
-      state.f5);
-
-  }
-
-  return 0;
+    return 0;
 }
