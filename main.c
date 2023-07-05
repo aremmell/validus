@@ -24,16 +24,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "validus.h"
 #include "validuslibrary.h"
 #include <version.h>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <conio.h>
-#else
-/* #include <curses.h> */
-#include <sys/types.h>
 #endif /* _WIN32 */
 
 int printusage(void);
@@ -69,75 +67,54 @@ int main(int argc, char *argv[])
     return hashfile(argv[1]);
 }
 
-/*
- *printusage() : Displays usage information of this program
- */
 int printusage(void)
 {
-    printf("validus -s [string]\t: Generates fingerprint for string\n");
-    printf("validus -t\t\t: Performs time-trial\n");
-    printf("validus -x\t\t: Displays test suite\n");
-    printf("validus [file]\t\t: Generates fingerprint for file\n");
-    printf("validus -v\t\tDisplays version information\n");
+    fprintf(stderr, "\nvalidus usage:\n");
+    fprintf(stderr, "\t-s <string>\t: Generates fingerprint for string\n");
+    fprintf(stderr, "\t-t\t\t: Runs performance test\n");
+    fprintf(stderr, "\t-x\t\t: Displays test suite\n");
+    fprintf(stderr, "\t<file>\t\t: Generates fingerprint for file\n");
+    fprintf(stderr, "\t-v\t\tDisplays version information\n");
 
-    return 0;
+    return EXIT_FAILURE;
 }
 
 int printversion(void)
 {
-    printf("validus v%" PRIu16 ".%" PRIu16 ".%" PRIu16 "-%s\n",
-        VERSION_MAJ, VERSION_MIN, VERSION_BLD,
-        GIT_COMMIT_HASH);
+    printf("validus v%"PRIu16".%"PRIu16".%"PRIu16"-%s\n",
+        VERSION_MAJ, VERSION_MIN, VERSION_BLD, GIT_COMMIT_HASH);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
-/*
- * hashfile() : Hashes [file] and displays result
- */
 int hashfile(const char *file)
 {
     validus_state state = {0};
-    if (0 != validus_hash_file(&state, file)) {
-        printf("validus: Unable to hash file [%s]!\n", file);
-        return 1;
+    if (!validus_hash_file(&state, file)) {
+        fprintf(stderr, "validus: Unable to hash file '%s'!\n", file);
+        return EXIT_FAILURE;
     }
 
-    printf("validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
-        file,
-        state.f0,
-        state.f1,
-        state.f2,
-        state.f3,
-        state.f4,
-        state.f5);
+    printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+        file, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
-/*
- * hashstring() : Hashes [string] and displays result
- */
 int hashstring(const char *string)
 {
     if (!string || !*string) {
-        printf("validus: No string supplied. Quitting.\n");
-        return 1;
+        fprintf(stderr, "validus: Invalid string supplied; ignoring.\n");
+        return EXIT_FAILURE;
     }
 
     validus_state state = {0};
     validus_hash_string(&state, string);
 
-    printf("validus [\"%s\"] = %08x%08x%08x%08x%08x%08x\n",
-        string,
-        state.f0,
-        state.f1,
-        state.f2,
-        state.f3,
-        state.f4,
-        state.f5);
+    printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+        string, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int timetrial(void)
@@ -147,9 +124,9 @@ int timetrial(void)
 
     validus_octet block[block_size];
     char timebuf[256] = {0};
-
     validus_timer timer = {0};
     time_t now;
+
     time(&now);
     validus_get_local_time(&now, timebuf);
 
@@ -177,21 +154,17 @@ int timetrial(void)
     printf("done; end at %s.\n"
            "Elapsed: %.03f seconds\n"
            "Throughput: %.2f MB/s\n"
-           "Hash: %08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "\n",
+           "Fingerprint: %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
            timebuf, (elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
-    return 0;
+
+    return EXIT_SUCCESS;
 }
 
-/*
- * testsuite() : Hashes predefined strings
- * and displays result; used to determine
- * if Validus is working correctly
- */
 int testsuite(void)
 {
     validus_state state = {0};
     int n               = 0;
-    char *test[]        = {
+    char *test_inputs[] = {
         "",
         "abc",
         "ABC",
@@ -209,16 +182,10 @@ int testsuite(void)
 		printf("\n=== Endianess detection: Little endian ===\n");
 
     for (n = 0; n < 8; ++n) {
-        validus_hash_string(&state, test[n]);
+        validus_hash_string(&state, test_inputs[n]);
         printf("validus [\"%s\"] = %08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"\n",
-            test[n],
-            state.f0,
-            state.f1,
-            state.f2,
-            state.f3,
-            state.f4,
-            state.f5);
+            test_inputs[n], state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

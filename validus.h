@@ -28,86 +28,117 @@
 
 #include <stdint.h>
 
+/////////////////////////////// typedefs ///////////////////////////////////////
+
 typedef uint8_t  validus_octet;
 typedef uint32_t validus_word;
 typedef int32_t  validus_int;
 
-/*
- * validus_state : The Validus state;
- * retains fingerprint and length data
+/**
+ * @struct validus_state
+ * Represents the running state of an ongoing Validus hash operation.
  */
 typedef struct {
     validus_word bits[2]; /* 64-bit bit counter */
-    validus_word f0;      /* Fingerprint word 1 */
-    validus_word f1;      /* Fingerprint word 2 */
-    validus_word f2;      /* Fingerprint word 3 */
-    validus_word f3;      /* Fingerprint word 4 */
-    validus_word f4;      /* Fingerprint word 5 */
-    validus_word f5;      /* Fingerprint word 6 */
+    validus_word f0;      /* word 1 */
+    validus_word f1;      /* word 2 */
+    validus_word f2;      /* word 3 */
+    validus_word f3;      /* word 4 */
+    validus_word f4;      /* word 5 */
+    validus_word f5;      /* word 6 */
 } validus_state;
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-/*
- * validus_init() : Initializes the Validus state
+/////////////////////////// function exports ///////////////////////////////////
+
+/**
+ * @brief Initializes a validus_state object.
+ *
+ * @note Must be called before ::validus_append.
+ * @note If `state` is NULL, this function will return early and have no effect.
+ *
+ * @param state The validus_state object to initialize.
  */
 void validus_init(validus_state* state);
 
-/*
- * validus_finalize() : Finalizes the hash process
- */
-void validus_finalize(validus_state* state);
-
-/*
- * validus_append() : Processes a block of data
+/**
+ * @brief Processes a block of data, accumulating the results in
+ * the validus_state object.
+ *
+ * @note If `state` or `data` are NULL, or `len` is zero, this function will
+ * return early, and have no effect.
+ *
+ * @param state The validus_state object in use for this series of data.
+ * @param data  Pointer to a new block of data to process.
+ * @param len   Length of `data` in octets.
  */
 void validus_append(validus_state* state, const void* data, validus_word len);
 
-/* Internal use only. */
+/**
+ * @brief Finalizes a Validus hashing operation.
+ *
+ * @note Must be called after the final call to ::validus_append.
+ * @note If `state` is NULL, this function will return early and have no effect.
+ *
+ * @param state The validus_state object to finalize.
+ */
+void validus_finalize(validus_state* state);
+
+/**
+ * @brief Processes a 192-octet block of data, accumulating the results
+ * in the validus_state object.
+ *
+ * @attention This function is only called by other Validus functions; do not
+ * call it directly.
+ *
+ * @param state The validus_state object in use for this series of data.
+ * @param blk32 Pointer to the block of data to be processed.
+ */
 void _validus_process(validus_state* state, const validus_word* blk32);
 
 #if defined(__cplusplus)
 }
 #endif
 
-/*
- * WORDALIGNED: Boolean function to determine if
- * address [a] is properly aligned on 32-bit memory boundaries
+////////////////////////////////// macros //////////////////////////////////////
+
+/** The size of validus_state, in octets. */
+#define VALIDUS_STATE_SIZE 192
+
+/**
+ * Boolean function to determine if address `a` is properly aligned on 32-bit
+ * boundaries.
  */
 #define WORDALIGNED(a) (((a - (const validus_word*)0) & 0x3) == 0)
 
-/*
- * OCTETSWAP: Swaps octet order of a 32-bit value [b] (represented as octets)
- * and stores result in [a]
+/**
+ * Swaps octet order of a 32-bit value `b` (represented as octets) and stores
+ * the result in `a`.
  */
 #define OCTETSWAP(a, b) (a = ((b[3] << 24) | (b[2] << 16) | (b[1] << 8) | (b[0])))
 
-/*
- * ROL: Cyclically rotates word [a] by [b] bits to the left
- */
+/** Cyclically rotates word `a` by `b` bits to the left. */
 #define ROL(a, b) (((a) << (b)) | ((a) >> (32 - b)))
 
-/*
- * ROR: Cyclically rotates word [a] by [b] bits to the right
- */
+/** Cyclically rotates word `a` by `b` bits to the right. */
 #define ROR(a, b) (((a) >> (b)) | ((a) << (32 - b)))
 
-/*
- * Mixer functions [M0 <-> M3]
- */
+/** Mixer functions [M0 <-> M3] */
 #define M0(a, b, c, d, e) ((((a) & (b)) ^ ((c) & (d)  ^ (e))))
-#define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c)  & (d) ^ (e))))
-#define M2(a, b, c, d, e) (((a)  & ((b) ^ (c)) ^ ~(d) & (e) ^ (c)))
+#define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c)  & (d)  ^ (e))))
+#define M2(a, b, c, d, e) (((a)  & ((b) ^ (c)) ^ ~(d) & (e)  ^ (c)))
 #define M3(a, b, c, d, e) ((((a) & (b)) ^ (c)  & ((d) ^ (e)) ^ (e)))
 
-/*
- * Compression functions
- * [a] <-> [f]  = Fingerprint words
- * [r1], [r2]   = Cyclical rotations
- * [blk]        = Word from message
- * [hcv]        = VALIDUS_n word
+/**
+ * Compression functions.
+ *
+ * `a` .. `f` = State words
+ * `r1`, `r2` = Cyclical rotations
+ * `blk`      = Word from message
+ * `hcv`      = VALIDUS_n word
  */
 #define VC_0(a, b, c, d, e, f, r1, r2, blk, hcv) {  \
     register validus_word t;                        \
@@ -133,9 +164,7 @@ void _validus_process(validus_state* state, const validus_word* blk32);
     a = ROR(t + blk, r2);                           \
 }
 
-/*
- * Initial fingerprint values
- */
+/** Initial state word values. */
 #define VALIDUS_INIT_0  0x81010881  /* 10000001000000010000100010000001 */
 #define VALIDUS_INIT_1  0xA529298B  /* 10100101001010010010100110001011 */
 #define VALIDUS_INIT_2  0x66AC654A  /* 01100110101011000110010101001010 */
@@ -143,9 +172,7 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 #define VALIDUS_INIT_4  0x18529234  /* 00011000010100101001001000110100 */
 #define VALIDUS_INIT_5  0x08508024  /* 00001000010100001000000000100100 */
 
-/*
- * Constants used in compression functions
- */
+/** Constants used in compression functions. */
 #define VALIDUS_0   0x4528A03E
 #define VALIDUS_1   0xCABBB352
 #define VALIDUS_2   0x8147ED07

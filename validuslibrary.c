@@ -25,13 +25,6 @@
  */
 #include "validuslibrary.h"
 
-/*
- * FUNCTION: validus_hash_string()
- *
- * ARGUMENTS: Pointer to Validus state, and string to hash
- *
- * RETURN VALUE: 0 for success, 1 for failure
- */
 bool validus_hash_string(validus_state* state, const char* string)
 {
     if (!state || !string)
@@ -55,28 +48,24 @@ bool validus_hash_mem(validus_state* state, const void* mem, validus_word len)
 
     return true;
 }
-/*
- * FUNCTION: validus_hash_file()
- *
- * ARGUMENTS: Pointer to Validus state, and file name
- *
- * RETURN VALUE: 0 for success, 1 for failure
- *
- * NOTES: Change VALIDUS_FILEBLOCKSIZE if you wish to adjust
- * the amount of bytes read per iteration.
- */
+
 bool validus_hash_file(validus_state* state, const char* file) {
   if (!state || (!file || !*file))
       return false;
 
     FILE *f = fopen(file, "rb");
-    if (!f)
+    if (!f) {
+        fprintf(stderr, "failed to open file '%s': %s", file,
+            strerror(errno));
         return false;
+    }
 
     validus_octet *buf  = (validus_octet*)calloc(sizeof(validus_octet),
         VALIDUS_FILEBLOCKSIZE);
 
     if (!buf) {
+        fprintf(stderr, "failed to allocate %zu octets of heap memory: %s",
+            sizeof(validus_octet) * VALIDUS_FILEBLOCKSIZE, strerror(errno));
         fclose(f);
         f = NULL;
         return false;
@@ -85,16 +74,21 @@ bool validus_hash_file(validus_state* state, const char* file) {
     bool retval = false;
     validus_init(state);
 
-    while (!feof(f)) {
-        size_t result = fread((void*)buf, sizeof(validus_octet), VALIDUS_FILEBLOCKSIZE, f);
+    while (!feof(f) && !ferror(f)) {
+        size_t result = fread((void*)buf, sizeof(validus_octet),
+            VALIDUS_FILEBLOCKSIZE, f);
 
         if (0 != result) {
             validus_append(state, buf, result);
+#pragma message("TODO: Don't think this memset is necessary.")
             memset(buf, 0, VALIDUS_FILEBLOCKSIZE);
         }
     }
 
-    if (0 == ferror(f)) {
+    if (0 != ferror(f)) {
+        fprintf(stderr, "failed to read from file '%s': %s",
+            file, strerror(errno));
+    } else {
         validus_finalize(state);
         retval = true;
     }
@@ -108,12 +102,6 @@ bool validus_hash_file(validus_state* state, const char* file) {
     return retval;
 }
 
-/* FUNCTION: validus_compare()
- *
- * ARGUMENTS: A pointer to two Validus states to compare
- *
- * RETURN VALUE: 0 if states are identical, 1 otherwise
- */
 bool validus_compare(const validus_state* one, const validus_state* two)
 {
     if (!one || !two)
@@ -124,38 +112,27 @@ bool validus_compare(const validus_state* one, const validus_state* two)
             one->f4 == two->f4 && one->f5 == two->f5);
 }
 
-/*
- * FUNCTION: validus_state_to_string()
- *
- * ARGUMENTS: A pointer to a Validus state that contains
- * the fingerprint to be converted.
- *
- * RETURN VALUE: Returns 0 if successful, or 1 otherwise.
- *
- * NOTES: The buffer pointed to by the variable 'out' must
- * be at least 49 bytes (6 words have the potential to be 48 char
- * acters, plus a null-terminator).
- */
-
-/**
- * @brief Convertes a validus_state to hexadecimal string form.
- *
- * @param   state Pointer to the validus_state to convert.
- * @param   out   Pointer to a buffer to receive the formatted string.
- * @param   len   The length of `out` in octets.
- * @returns bool  `true` if input parameters are valid, and conversion succeeds,
- *                `false` otherwise.
- */
 bool validus_state_to_string(const validus_state* state, char* out, size_t len)
 {
     if (!state || !out || len < 49)
         return false;
 
-    int print = snprintf(out, len, "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32,
-        state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+    int prn = snprintf(
+                out,
+                len,
+                "%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32,
+                state->f0,
+                state->f1,
+                state->f2,
+                state->f3,
+                state->f4,
+                state->f5
+            );
 
-    return -1 != print;
+    return -1 != prn;
 }
+
+////////////////////////// internal functions //////////////////////////////////
 
 void validus_timer_start(validus_timer* timer)
 {
