@@ -34,7 +34,7 @@
  */
 bool validus_hash_string(validus_state* state, const char* string)
 {
-    if (!state || (!string || !*string))
+    if (!state || !string)
         return false;
 
     validus_init(state);
