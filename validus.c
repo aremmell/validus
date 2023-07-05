@@ -115,9 +115,9 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word e = state->f4;
     validus_word f = state->f5;
 
-#pragma message("TODO: determine endianness upon startup and store it in state.")
-#ifdef VALIDUS_ENDIAN_BIG
+#ifdef VALIDUS_BIG_ENDIAN
 {
+#pragma message("BIG ENDIAN")
     validus_int n;
     validus_word stk[48];
 
@@ -128,6 +128,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
 }
 #else
 {
+#pragma message("LITTLE ENDIAN")
     if (0 == WORDALIGNED(blk32)) {
         validus_word stk[48];
         memcpy(stk, blk32, 192);
