@@ -30,11 +30,21 @@ jobs:
       arch: arm64
       compiler: gcc
     - os: linux
+      arch: s390x
+      compiler: gcc
+    - os: linux
+      arch: arm64-graviton2
+      virt: lxd
+      group: edge
+      compiler: gcc
+    - os: linux
       arch: arm64
       compiler: clang
     - os: osx
       osx_image: xcode14.2
       compiler: clang
+    - os: linux-ppc64le
+      compiler: gcc
 before_script:
   - ./configure.sh cmake-info
 script:

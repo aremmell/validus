@@ -202,6 +202,12 @@ int testsuite(void)
         "0987654321"
     };
 
+    uint16_t word = 0xABCD;
+	if ((word & 0xff00) == 0xCD)
+		printf("\n=== Endianess detection: Big endian ===\n");
+	else
+		printf("\n=== Endianess detection: Little endian ===\n");
+
     for (n = 0; n < 8; ++n) {
         validus_hash_string(&state, test[n]);
         printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
