@@ -14,7 +14,6 @@ cmake_policy(SET CMP0102 NEW) # mark_as_advanced
 # toolchain-related
 set(C_FLAGS_DEBUG -g -O0 -DDEBUG)
 set(C_FLAGS_RELEASE -O3 -D_FORTIFY_SOURCE=2 -DNDEBUG)
-set(CMAKE_C_COMPILER /usr/bin/gcc)
 
 # define the project
 project(
