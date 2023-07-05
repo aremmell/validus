@@ -196,21 +196,21 @@ int testsuite(void)
         "abc",
         "ABC",
         "validus",
-        "hash function",
-        "testing123",
-        "0123456789",
-        "0987654321"
+        "111",
+        "112",
+        "hello, world",
+        "dlrow ,olleh"
     };
 
-    uint16_t word = 0xABCD;
-	if ((word & 0xff00) == 0xCD)
+    uint16_t word = 0xABCD1234;
+	if (*((uint8_t*)&word) == 0xAB)
 		printf("\n=== Endianess detection: Big endian ===\n");
 	else
 		printf("\n=== Endianess detection: Little endian ===\n");
 
     for (n = 0; n < 8; ++n) {
         validus_hash_string(&state, test[n]);
-        printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+        printf("validus [\"%s\"] = %08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"-%08"PRIx32"\n",
             test[n],
             state.f0,
             state.f1,

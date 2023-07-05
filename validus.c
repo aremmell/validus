@@ -97,7 +97,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word stk[48];
 
     for(n = 47; n >= 0; n--)
-        OCTETSWAP(stk[n], ((validus_octet *)&blk32[n]));
+        OCTETSWAP(stk[n], ((validus_octet*)&blk32[n]));
 
     blk32 = stk;
 }
