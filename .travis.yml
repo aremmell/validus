@@ -43,8 +43,6 @@ jobs:
     - os: osx
       osx_image: xcode14.2
       compiler: clang
-    - os: linux-ppc64le
-      compiler: gcc
 before_script:
   - ./configure.sh cmake-info
 script:
