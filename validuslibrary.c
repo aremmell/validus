@@ -83,7 +83,7 @@ bool validus_hash_file(validus_state* state, const char* file) {
     }
 
     if (0 != ferror(f)) {
-        fprintf(stderr, "failed to read from file '%s': %s",
+        fprintf(stderr, "failed to read from file '%s': %s\n",
             file, strerror(errno));
     } else {
         validus_finalize(state);
@@ -133,27 +133,45 @@ bool validus_state_to_string(const validus_state* state, char* out, size_t len)
 
 void validus_timer_start(validus_timer* timer)
 {
-    int ret = clock_gettime(CLOCK_REALTIME, timer);
+#if !defined(__WIN__)
+    int ret = clock_gettime(CLOCK_REALTIME, timer->ts);
     if (0 != ret) {
-        fprintf(stderr, "clock_gettime() failed: %s", strerror(errno));
+        fprintf(stderr, "clock_gettime() failed: %s\n", strerror(errno));
         timer->tv_nsec = 0;
         timer->tv_nsec = 0;
     }
+#else /* __WIN__ */
+    GetSystemTimePreciseAsFileTime(&timer->ft);
+#endif
 }
 
 float validus_timer_elapsed(validus_timer* timer)
 {
     validus_timer now;
 
+#if !defined(__WIN__)
     int ret = clock_gettime(CLOCK_REALTIME, &now);
     if (0 != ret) {
-        fprintf(stderr, "clock_gettime() failed: %s", strerror(errno));
+        fprintf(stderr, "clock_gettime() failed: %s\n", strerror(errno));
         return 0.0f;
     }
 
     /* milliseconds */
-    return (float)((now.tv_sec * 1e3) + (now.tv_nsec / 1e6) - (timer->tv_sec * 1e3) +
-            (timer->tv_nsec / 1e6));
+    return (float)((now.tv_sec * 1e3) + (now.tv_nsec / 1e6) - (timer->ts.tv_sec * 1e3) +
+            (timer->ts.tv_nsec / 1e6));
+#else /* __WIN__ */
+    GetSystemTimePreciseAsFileTime(&now.ft);
+
+    ULARGE_INTEGER ulnow;
+    ulnow.LowPart = now.ft.dwLowDateTime;
+    ulnow.HighPart = now.ft.dwHighDateTime;
+
+    ULARGE_INTEGER ultimer;
+    ultimer.LowPart = timer->ft.dwLowDateTime;
+    ultimer.HighPart = timer->ft.dwHighDateTime;
+
+    return (float)((ulnow.QuadPart - ultimer.QuadPart) / 1e4);
+#endif
 }
 
 void validus_get_local_time(const time_t* when, char out[256])

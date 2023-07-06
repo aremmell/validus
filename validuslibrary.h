@@ -35,6 +35,14 @@
 #include <errno.h>
 #include <time.h>
 
+#if defined(_WIN32)
+# define WIN32_LEAN_AND_MEAN
+# define WINVER       0x0A00
+# define _WIN32_WINNT 0x0A00
+# include <windows.h>
+# define __WIN__
+#endif
+
 /** The size, in octets that is used to read chunks of data from a file. */
 #define VALIDUS_FILEBLOCKSIZE 8192
 
@@ -109,11 +117,13 @@ bool validus_state_to_string(const validus_state *state, char *out, size_t len);
 
 ////////////////////////// internal functions //////////////////////////////////
 
-#if defined(_WIN32)
-# error "no timer implementation"
+typedef struct {
+#if defined(__WIN__)
+    FILETIME ft;
 #else
-typedef struct timespec validus_timer;
+    struct timespec ts;
 #endif
+} validus_timer;
 
 void validus_timer_start(validus_timer* timer);
 float validus_timer_elapsed(validus_timer* timer);

@@ -44,6 +44,11 @@ add_executable(
     main.c
 )
 
+if(WIN32)
+    add_library(libcmt.lib STATIC IMPORTED)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif()
+
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
