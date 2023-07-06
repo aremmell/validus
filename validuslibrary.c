@@ -150,7 +150,7 @@ float validus_timer_elapsed(validus_timer* timer)
     validus_timer now;
 
 #if !defined(__WIN__)
-    int ret = clock_gettime(CLOCK_REALTIME, &now);
+    int ret = clock_gettime(CLOCK_REALTIME, &now.ts);
     if (0 != ret) {
         fprintf(stderr, "clock_gettime() failed: %s\n", strerror(errno));
         return 0.0f;
