@@ -134,11 +134,11 @@ bool validus_state_to_string(const validus_state* state, char* out, size_t len)
 void validus_timer_start(validus_timer* timer)
 {
 #if !defined(__WIN__)
-    int ret = clock_gettime(CLOCK_REALTIME, timer->ts);
+    int ret = clock_gettime(CLOCK_REALTIME, &timer->ts);
     if (0 != ret) {
         fprintf(stderr, "clock_gettime() failed: %s\n", strerror(errno));
-        timer->tv_nsec = 0;
-        timer->tv_nsec = 0;
+        timer->ts.tv_nsec = 0;
+        timer->ts.tv_nsec = 0;
     }
 #else /* __WIN__ */
     GetSystemTimePreciseAsFileTime(&timer->ft);
@@ -157,7 +157,7 @@ float validus_timer_elapsed(validus_timer* timer)
     }
 
     /* milliseconds */
-    return (float)((now.tv_sec * 1e3) + (now.tv_nsec / 1e6) - (timer->ts.tv_sec * 1e3) +
+    return (float)((now.ts.tv_sec * 1e3) + (now.ts.tv_nsec / 1e6) - (timer->ts.tv_sec * 1e3) +
             (timer->ts.tv_nsec / 1e6));
 #else /* __WIN__ */
     GetSystemTimePreciseAsFileTime(&now.ft);
