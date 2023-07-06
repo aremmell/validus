@@ -24,7 +24,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #include "validus.h"
-//#include <stdlib.h>
 #include <string.h>
 
 void validus_init(validus_state* state)
