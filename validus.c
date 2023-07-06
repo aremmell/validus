@@ -115,26 +115,17 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word e = state->f4;
     validus_word f = state->f5;
 
-#ifdef VALIDUS_BIG_ENDIAN
-{
-#pragma message("BIG ENDIAN")
-    validus_int n;
     validus_word stk[48];
 
-    for(n = 47; n >= 0; n--)
+#ifdef VALIDUS_BIG_ENDIAN
+    for(validus_int n = 47; n >= 0; n--)
         OCTETSWAP(stk[n], ((validus_octet*)&blk32[n]));
-
     blk32 = stk;
-}
 #else
-{
-#pragma message("LITTLE ENDIAN")
     if (0 == WORDALIGNED(blk32)) {
-        validus_word stk[48];
-        memcpy(stk, blk32, 192);
+        memcpy(stk, blk32, VALIDUS_STATE_SIZE);
         blk32 = stk;
     }
-}
 #endif
 
     VC_0(d, c, b, a, f, e,  2,  3, blk32[47], VALIDUS_0);
