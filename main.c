@@ -162,13 +162,14 @@ void print_test_result(bool result, validus_state* state, const char* input) {
         color, input, state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
 }
 
+#define NUM_TEST_INPUTS 8
+
 int testsuite(void)
 {
-    static const size_t num_inputs = 8;
     static const struct test_value {
         const char* str;
         validus_state kv;
-    } test_inputs[num_inputs] = {
+    } test_inputs[NUM_TEST_INPUTS] = {
         {"",
             {0, 0, 0xd3f0ad33, 0x79790917, 0x69135e44, 0xeb28aeda, 0x40e5423d, 0xd2e956e7}},
         {"abc",
@@ -190,7 +191,7 @@ int testsuite(void)
     bool all_pass = true;
     validus_state state = {0};
 
-    for (size_t n = 0; n < num_inputs; ++n) {
+    for (size_t n = 0; n < NUM_TEST_INPUTS; ++n) {
         validus_hash_string(&state, test_inputs[n].str);
         bool pass = validus_compare(&state, &test_inputs[n].kv);
         print_test_result(pass, &state, test_inputs[n].str);
