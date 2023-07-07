@@ -49,6 +49,10 @@
 /** The maximum allowable size of a string, in octets. */
 #define VALIDUS_MAX_STRING 2048
 
+/** Format specifier string for a Validus fingerprint. */
+#define VALIDUS_FP_FMT_SPEC \
+    "%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32
+
 #ifdef __cplusplus
 extern "C" {
 #endif

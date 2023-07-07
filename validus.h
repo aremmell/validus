@@ -29,12 +29,6 @@
 #include <stdint.h>
 
 ///////////////////////////// preprocessor /////////////////////////////////////
-/* #if !defined(_MSC_VER)
-# include <sys/param.h>
-#endif
-
-#include <sys/types.h> */
-
 #if defined(__linux__)  || defined(__GNU__)    || defined(__CYGWIN__) || \
     defined(__GLIBC__)  || defined(__HAIKU__)  || defined(__APPLE__)
 # if defined(__APPLE__)
@@ -84,7 +78,7 @@
 #endif
 
 #if !defined(BYTE_ORDER) || !defined(LITTLE_ENDIAN) || !defined(BIG_ENDIAN)
-# error "failed to determine endian-ness of this platform."
+# error "failed to determine endian-ness of this system."
 #endif
 
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -95,22 +89,22 @@
 
 /////////////////////////////// typedefs ///////////////////////////////////////
 
-typedef uint8_t  validus_octet;
-typedef uint32_t validus_word;
-typedef int32_t  validus_int;
+typedef uint8_t  validus_octet; /**< Validus octet/byte (8-bit). */
+typedef uint32_t validus_word;  /**< Validus word (32-bit). */
+typedef int32_t  validus_int;   /**< Validus integer (32-bit). */
 
 /**
  * @struct validus_state
- * Represents the running state of an ongoing Validus hash operation.
+ * Represents the state of a Validus hash operation.
  */
 typedef struct {
-    validus_word bits[2]; /* 64-bit bit counter */
-    validus_word f0;      /* word 1 */
-    validus_word f1;      /* word 2 */
-    validus_word f2;      /* word 3 */
-    validus_word f3;      /* word 4 */
-    validus_word f4;      /* word 5 */
-    validus_word f5;      /* word 6 */
+    validus_word bits[2]; /**< 64-bit bit counter */
+    validus_word f0;      /**< word 1 */
+    validus_word f1;      /**< word 2 */
+    validus_word f2;      /**< word 3 */
+    validus_word f3;      /**< word 4 */
+    validus_word f4;      /**< word 5 */
+    validus_word f5;      /**< word 6 */
 } validus_state;
 
 #if defined(__cplusplus)
@@ -125,7 +119,7 @@ extern "C" {
  * @note Must be called before ::validus_append.
  * @note If `state` is NULL, this function will return early and have no effect.
  *
- * @param state The validus_state object to initialize.
+ * @param state Pointer to the validus_state object to initialize.
  */
 void validus_init(validus_state* state);
 
@@ -136,7 +130,7 @@ void validus_init(validus_state* state);
  * @note If `state` or `data` are NULL, or `len` is zero, this function will
  * return early, and have no effect.
  *
- * @param state The validus_state object in use for this series of data.
+ * @param state Pointer to the validus_state object in use for this series of data.
  * @param data  Pointer to a new block of data to process.
  * @param len   Length of `data` in octets.
  */
@@ -148,7 +142,7 @@ void validus_append(validus_state* state, const void* data, validus_word len);
  * @note Must be called after the final call to ::validus_append.
  * @note If `state` is NULL, this function will return early and have no effect.
  *
- * @param state The validus_state object to finalize.
+ * @param state Pointer to the validus_state object to finalize.
  */
 void validus_finalize(validus_state* state);
 
@@ -159,7 +153,7 @@ void validus_finalize(validus_state* state);
  * @attention This function is only called by other Validus functions; do not
  * call it directly.
  *
- * @param state The validus_state object in use for this series of data.
+ * @param state Pointer to the validus_state object in use for this series of data.
  * @param blk32 Pointer to the block of data to be processed.
  */
 void _validus_process(validus_state* state, const validus_word* blk32);
@@ -170,8 +164,11 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 
 ////////////////////////////////// macros //////////////////////////////////////
 
-/** The size of validus_state, in octets. */
-#define VALIDUS_STATE_SIZE 192
+/** The size of a Validus fingerprint, in bits. */
+#define VALIDUS_FP_SIZE_B 192
+
+/** The size of a Validus fingerprint, in octets. */
+#define VALIDUS_FP_SIZE_O 48
 
 /**
  * Boolean function to determine if address `a` is properly aligned on 32-bit
@@ -191,20 +188,13 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 /** Cyclically rotates word `a` by `b` bits to the right. */
 #define ROR(a, b) (((a) >> (b)) | ((a) << (32 - b)))
 
-/** Mixer functions [M0 <-> M3] */
+/** Mixer functions [M0 .. M3] */
 #define M0(a, b, c, d, e) ((((a) & (b)) ^ ((c) & (d)  ^ (e))))
 #define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c)  & (d)  ^ (e))))
 #define M2(a, b, c, d, e) (((a)  & ((b) ^ (c)) ^ ~(d) & (e)  ^ (c)))
 #define M3(a, b, c, d, e) ((((a) & (b)) ^ (c)  & ((d) ^ (e)) ^ (e)))
 
-/**
- * Compression functions.
- *
- * `a` .. `f` = State words
- * `r1`, `r2` = Cyclical rotations
- * `blk`      = Word from message
- * `hcv`      = VALIDUS_n word
- */
+/** Compression functions [VC_0 .. VC_3]*/
 #define VC_0(a, b, c, d, e, f, r1, r2, blk, hcv) {  \
     register validus_word t;                        \
     t = a + M0(b, c, d, e, f) + ROL(blk + hcv, r1); \
@@ -229,7 +219,7 @@ void _validus_process(validus_state* state, const validus_word* blk32);
     a = ROR(t + blk, r2);                           \
 }
 
-/** Initial state word values. */
+/** Initial state values. */
 #define VALIDUS_INIT_0  0x81010881  /* 10000001000000010000100010000001 */
 #define VALIDUS_INIT_1  0xA529298B  /* 10100101001010010010100110001011 */
 #define VALIDUS_INIT_2  0x66AC654A  /* 01100110101011000110010101001010 */

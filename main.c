@@ -93,7 +93,7 @@ int hashfile(const char *file)
     if (!validus_hash_file(&state, file))
         return EXIT_FAILURE;
 
-    printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
+    printf("validus ['%s'] = " VALIDUS_FP_FMT_SPEC "\n",
         file, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
     return EXIT_SUCCESS;
@@ -109,8 +109,8 @@ int hashstring(const char *string)
     validus_state state = {0};
     validus_hash_string(&state, string);
 
-    printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
-        string, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
+    printf("validus ['%s'] = " VALIDUS_FP_FMT_SPEC "\n", string, state.f0,
+        state.f1, state.f2, state.f3, state.f4, state.f5);
 
     return EXIT_SUCCESS;
 }
@@ -128,7 +128,7 @@ int timetrial(void)
     time(&now);
     validus_get_local_time(&now, timebuf);
 
-    printf("Validus speed test: begin at %s; processing %zu %zu-byte blocks (%zu GB)... ",
+    printf("Validus speed test: begin at %s; %zu %zu-byte blocks (%zu GB)... ",
         timebuf, blocks, block_size, (blocks * block_size) / 1000 / 1000 / 1000);
     fflush(stdout);
 
@@ -149,42 +149,53 @@ int timetrial(void)
     time(&now);
     validus_get_local_time(&now, timebuf);
 
-    printf("done; end at %s.\n"
-           "Elapsed: %.03f seconds\n"
-           "Throughput: %.2f MB/s\n"
-           "Fingerprint: %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
-           timebuf, (elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
+    printf("done; end at %s.\nElapsed: %.03f seconds\nThroughput: %.2f MB/s\n"
+           "Fingerprint: " VALIDUS_FP_FMT_SPEC "\n", timebuf, (elapsed_msec / 1e3),
+           mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
     return EXIT_SUCCESS;
 }
 
+void print_test_result(bool result, validus_state* state, const char* input) {
+    const int color = result ? 32 : 31;
+    printf("\x1b[%dmvalidus ['%s'] = " VALIDUS_FP_FMT_SPEC "\x1b[0m\n",
+        color, input, state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+}
+
 int testsuite(void)
 {
-    validus_state state = {0};
-    int n               = 0;
-    char *test_inputs[] = {
-        "",
-        "abc",
-        "ABC",
-        "validus",
-        "111",
-        "112",
-        "hello, world",
-        "dlrow ,olleh"
+    static const size_t num_inputs = 8;
+    static const struct test_value {
+        const char* str;
+        validus_state kv;
+    } test_inputs[num_inputs] = {
+        {"",
+            {0, 0, 0xd3f0ad33, 0x79790917, 0x69135e44, 0xeb28aeda, 0x40e5423d, 0xd2e956e7}},
+        {"abc",
+            {0, 0, 0xf7ffabe5, 0x4ddb09a9, 0x3ebde51b, 0x90d1796a, 0x63ea3cc1, 0xa5ed093f}},
+        {"ABC",
+            {0, 0, 0x9c273091, 0x9216af67, 0xc3d9a325, 0x4401ade8, 0x5920b7c1, 0xd707c65d}},
+        {"validus",
+            {0, 0, 0xa16bbad7, 0x293dac29, 0x04cc1807, 0x6636125c, 0x2c68c29c, 0xcffa779d}},
+        {"1111111",
+            {0, 0, 0x4f7879df, 0xe986f48e, 0x047190fe, 0x0961783a, 0x177b6dc1, 0x9d5f30d1}},
+        {"1111112",
+            {0, 0, 0x5f26b88d, 0xd4c24f7d, 0xe828d3ed, 0x18dc0a05, 0x45f26eb0, 0xc0b09061}},
+        {"hello, world",
+            {0, 0, 0xa54b0bad, 0xf8061b9b, 0x6f14c542, 0x0d2bd823, 0x9fbb7f67, 0x50b67af7}},
+        {"dlrow ,olleh",
+            {0, 0, 0x3a39f172, 0xc900b9d8, 0x6efe31dd, 0xc065bdf9, 0xe02c4837, 0x50f9af86}}
     };
 
-    for (n = 0; n < 8; ++n) {
-        validus_hash_string(&state, test_inputs[n]);
-        printf("validus [\"%s\"] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
-            test_inputs[n], state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
+    bool all_pass = true;
+    validus_state state = {0};
+
+    for (size_t n = 0; n < num_inputs; ++n) {
+        validus_hash_string(&state, test_inputs[n].str);
+        bool pass = validus_compare(&state, &test_inputs[n].kv);
+        print_test_result(pass, &state, test_inputs[n].str);
+        all_pass &= pass;
     }
 
-    uint8_t membuf[10] = {
-        0xfe, 0xaa, 0x10, 0x00, 0x50, 0xe6, 0x03, 0x33, 0x44, 0x59
-    };
-
-    validus_hash_mem(&state, membuf, sizeof(membuf));
-        printf("validus [membuf] = %08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"\n",
-            state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
-    return EXIT_SUCCESS;
+    return all_pass ? EXIT_SUCCESS : EXIT_FAILURE;
 }

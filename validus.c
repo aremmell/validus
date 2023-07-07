@@ -45,7 +45,7 @@ void validus_append(validus_state* state, const void* data, validus_word len)
     if (!state || !data || len == 0)
         return;
 
-    const validus_word* ptr = (validus_word*)data;
+    const validus_word* ptr = (const validus_word*)data;
     validus_word left       = 0;
     validus_word done       = 0;
 
@@ -55,15 +55,14 @@ void validus_append(validus_state* state, const void* data, validus_word len)
         state->bits[1]++;
 
     while ((left = (len - done))) {
-        if (left >= VALIDUS_STATE_SIZE) {
+        if (left >= VALIDUS_FP_SIZE_B) {
             _validus_process(state, ptr);
-            done += VALIDUS_STATE_SIZE;
-            ptr  += 48;
+            done += VALIDUS_FP_SIZE_B;
+            ptr  += VALIDUS_FP_SIZE_O;
         } else {
-            validus_word stk[48];
-
+            validus_word stk[VALIDUS_FP_SIZE_O];
             memcpy(stk, ptr, left);
-            memset(((validus_octet*)stk) + left, 0, VALIDUS_STATE_SIZE - left);
+            memset(((validus_octet*)stk) + left, 0, VALIDUS_FP_SIZE_B - left);
             _validus_process(state, stk);
             done += left;
         }
@@ -114,15 +113,15 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word e = state->f4;
     validus_word f = state->f5;
 
-    validus_word stk[48];
+    validus_word stk[VALIDUS_FP_SIZE_O];
 
 #ifdef VALIDUS_BIG_ENDIAN
     for(validus_int n = 47; n >= 0; n--)
         OCTETSWAP(stk[n], ((validus_octet*)&blk32[n]));
     blk32 = stk;
 #else
-    if (0 == WORDALIGNED(blk32)) {
-        memcpy(stk, blk32, VALIDUS_STATE_SIZE);
+    if (!WORDALIGNED(blk32)) {
+        memcpy(stk, blk32, VALIDUS_FP_SIZE_B);
         blk32 = stk;
     }
 #endif

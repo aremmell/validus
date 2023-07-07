@@ -55,8 +55,7 @@ bool validus_hash_file(validus_state* state, const char* file) {
 
     FILE *f = fopen(file, "rb");
     if (!f) {
-        fprintf(stderr, "failed to open file '%s': %s\n", file,
-            strerror(errno));
+        fprintf(stderr, "failed to open file '%s': %s\n", file, strerror(errno));
         return false;
     }
 
@@ -111,20 +110,11 @@ bool validus_compare(const validus_state* one, const validus_state* two)
 
 bool validus_state_to_string(const validus_state* state, char* out, size_t len)
 {
-    if (!state || !out || len < 49)
+    if (!state || !out || len < VALIDUS_FP_SIZE_O + 1)
         return false;
 
-    int prn = snprintf(
-                out,
-                len,
-                "%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32,
-                state->f0,
-                state->f1,
-                state->f2,
-                state->f3,
-                state->f4,
-                state->f5
-            );
+    int prn = snprintf(out, len, VALIDUS_FP_FMT_SPEC, state->f0, state->f1,
+        state->f2, state->f3, state->f4, state->f5);
 
     return -1 != prn;
 }
@@ -157,8 +147,8 @@ float validus_timer_elapsed(validus_timer* timer)
     }
 
     /* milliseconds */
-    return (float)((now.ts.tv_sec * 1e3) + (now.ts.tv_nsec / 1e6) - (timer->ts.tv_sec * 1e3) +
-            (timer->ts.tv_nsec / 1e6));
+    return (float)((now.ts.tv_sec * 1e3) + (now.ts.tv_nsec / 1e6) -
+        (timer->ts.tv_sec * 1e3) + (timer->ts.tv_nsec / 1e6));
 #else /* __WIN__ */
     GetSystemTimePreciseAsFileTime(&now.ft);
 
