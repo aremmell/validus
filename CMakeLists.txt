@@ -41,7 +41,7 @@ add_executable(
     ${PROJECT_NAME}
     validus.c
     validuslibrary.c
-    main.c
+    validuscli.c
 )
 
 if(WIN32)

@@ -74,7 +74,7 @@ void validus_finalize(validus_state* state)
     if (!state)
         return;
 
-    validus_octet finish[192] = {
+    validus_octet finish[VALIDUS_FP_SIZE_B] = {
         0xAA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -116,7 +116,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word stk[VALIDUS_FP_SIZE_O];
 
 #ifdef VALIDUS_BIG_ENDIAN
-    for(validus_int n = 47; n >= 0; n--)
+    for(validus_int n = VALIDUS_FP_SIZE_O - 1; n >= 0; n--)
         OCTETSWAP(stk[n], ((validus_octet*)&blk32[n]));
     blk32 = stk;
 #else

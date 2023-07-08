@@ -23,127 +23,119 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "validus.h"
-#include "validuslibrary.h"
-#include <version.h>
-
-#if defined(_WIN32)
-# include <conio.h>
-#endif
-
-int printusage(void);
-int printversion(void);
-int hashfile(const char *file);
-int hashstring(const char *string);
-int timetrial(void);
-int testsuite(void);
+#include "validuscli.h"
 
 int main(int argc, char *argv[])
 {
     /* Print usage */
-    if (argc < 2 || strncmp(argv[1], "-h", 2) == 0)
-        return printusage();
+    if (argc < 2 || strncmp(argv[1], VALIDUS_CLI_HELP, 2) == 0)
+        goto _print_usage;
 
     /* Hash string */
-    if (strncmp(argv[1], "-s", 2) == 0)
-        return hashstring(argv[2]);
-
-    /* Time trial */
-    if (strncmp(argv[1], "-t", 2) == 0)
-        return timetrial();
-
-    /* Test suite */
-    if (strncmp(argv[1], "-x", 2) == 0)
-        return testsuite();
-
-    /* Version info */
-    if (strncmp(argv[1], "-v", 2) == 0)
-        return printversion();
+    if (strncmp(argv[1], VALIDUS_CLI_STR, 2) == 0)
+        return validus_cli_hash_string(argv[2]);
 
     /* Hash file */
-    return hashfile(argv[1]);
+    if (strncmp(argv[1], VALIDUS_CLI_FILE, 2) == 0)
+        return validus_cli_hash_file(argv[2]);
+
+    /* Performance measurement */
+    if (strncmp(argv[1], VALIDUS_CLI_PERF, 2) == 0)
+        return validus_cli_perf_test();
+
+    /* Verify sanity */
+    if (strncmp(argv[1], VALIDUS_CLI_VS, 2) == 0)
+        return validus_cli_verify_sanity();
+
+    /* Version info */
+    if (strncmp(argv[1], VALIDUS_CLI_VER, 2) == 0)
+        return validus_cli_print_ver();
+
+_print_usage:
+    return validus_cli_print_usage();
 }
 
-int printusage(void)
+int validus_cli_print_usage(void)
 {
-    fprintf(stderr, "\nvalidus usage:\n");
-    fprintf(stderr, "\t-s <string>\t: Generates fingerprint for string\n");
-    fprintf(stderr, "\t-t\t\t: Runs performance test\n");
-    fprintf(stderr, "\t-x\t\t: Displays test suite\n");
-    fprintf(stderr, "\t<file>\t\t: Generates fingerprint for file\n");
-    fprintf(stderr, "\t-v\t\tDisplays version information\n");
+    fprintf(stderr, "\n"VALIDUS_CLI_NAME" usage:\n");
+    fprintf(stderr, "\t"VALIDUS_CLI_STR" <string>: Hash string and show fingerprint.\n");
+    fprintf(stderr, "\t"VALIDUS_CLI_PERF": Performance measurement.\n");
+    fprintf(stderr, "\t"VALIDUS_CLI_VS": Verify sanity.\n");
+    fprintf(stderr, "\t"VALIDUS_CLI_FILE" <file>: Hash file and show fingerprint.\n");
+    fprintf(stderr, "\t"VALIDUS_CLI_VER": Display version information.\n");
 
     return EXIT_FAILURE;
 }
 
-int printversion(void)
+int validus_cli_print_ver(void)
 {
-    printf("validus v%"PRIu16".%"PRIu16".%"PRIu16"-%s\n",
+    printf(VALIDUS_CLI_NAME" v%"PRIu16".%"PRIu16".%"PRIu16"-%s\n",
         VERSION_MAJ, VERSION_MIN, VERSION_BLD, GIT_COMMIT_HASH);
-
     return EXIT_SUCCESS;
 }
 
-int hashfile(const char *file)
+int validus_cli_hash_file(const char *file)
 {
     validus_state state = {0};
     if (!validus_hash_file(&state, file))
         return EXIT_FAILURE;
 
-    printf("validus ['%s'] = " VALIDUS_FP_FMT_SPEC "\n",
+    printf(VALIDUS_CLI_NAME" ['%s'] = " VALIDUS_FP_FMT_SPEC "\n",
         file, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
     return EXIT_SUCCESS;
 }
 
-int hashstring(const char *string)
+int validus_cli_hash_string(const char *string)
 {
     if (!string || !*string) {
-        fprintf(stderr, "validus: Invalid string supplied; ignoring.\n");
+        fprintf(stderr, VALIDUS_CLI_NAME": invalid string supplied; ignoring.\n");
         return EXIT_FAILURE;
     }
 
     validus_state state = {0};
-    validus_hash_string(&state, string);
+    if (!validus_hash_string(&state, string))
+        return EXIT_FAILURE;
 
-    printf("validus ['%s'] = " VALIDUS_FP_FMT_SPEC "\n", string, state.f0,
-        state.f1, state.f2, state.f3, state.f4, state.f5);
+    printf(VALIDUS_CLI_NAME" ['%s'] = " VALIDUS_FP_FMT_SPEC "\n", string,
+        state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
     return EXIT_SUCCESS;
 }
 
-int timetrial(void)
+int validus_cli_perf_test(void)
 {
-    static const size_t blocks = (size_t)1e6;
-    static const size_t block_size = (size_t)1e5;
-
-    validus_octet block[block_size];
+    validus_octet block[VALIDUS_CLI_PERF_BLOCKSIZE];
+    memset(block, 0xee, sizeof(validus_octet) * VALIDUS_CLI_PERF_BLOCKSIZE);
     char timebuf[256] = {0};
-    validus_timer timer = {0};
     time_t now;
 
     time(&now);
     validus_get_local_time(&now, timebuf);
 
-    printf("Validus speed test: begin at %s; %zu %zu-byte blocks (%zu GB)... ",
-        timebuf, blocks, block_size, (blocks * block_size) / 1000 / 1000 / 1000);
+    printf(
+        VALIDUS_CLI_NAME" performance test: begin at %s; %zu %zu-byte blocks (%zu GB)...",
+        timebuf,
+        VALIDUS_CLI_PERF_BLOCKS,
+        VALIDUS_CLI_PERF_BLOCKSIZE,
+        (VALIDUS_CLI_PERF_BLOCKS * VALIDUS_CLI_PERF_BLOCKSIZE) / 1000 / 1000 / 1000
+    );
     fflush(stdout);
 
+    validus_timer timer = {0};
     validus_state state = {0};
 
     validus_timer_start(&timer);
     validus_init(&state);
 
-    for (size_t i = blocks; i > 0; i--)
-        validus_append(&state, block, block_size);
+    for (size_t i = VALIDUS_CLI_PERF_BLOCKS; i > 0; i--)
+        validus_append(&state, block, VALIDUS_CLI_PERF_BLOCKSIZE);
 
     validus_finalize(&state);
 
     float elapsed_msec = validus_timer_elapsed(&timer);
-    float bps = ((float)block_size * (float)blocks) / (elapsed_msec / 1000.0f);
+    float bps = (float)(VALIDUS_CLI_PERF_BLOCKSIZE * VALIDUS_CLI_PERF_BLOCKSIZE)
+        / (elapsed_msec / 1000.0f);
     float mbs = (bps / 1000.0f) / 1000.0f;
 
     time(&now);
@@ -158,18 +150,18 @@ int timetrial(void)
 
 void print_test_result(bool result, validus_state* state, const char* input) {
     const int color = result ? 32 : 31;
-    printf("\x1b[%dmvalidus ['%s'] = " VALIDUS_FP_FMT_SPEC "\x1b[0m\n",
-        color, input, state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+
+    printf(ANSI_ESC "97m" VALIDUS_CLI_NAME" ['%s'] = "
+           ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, color,
+           state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
 }
 
-#define NUM_TEST_INPUTS 8
-
-int testsuite(void)
+int validus_cli_verify_sanity(void)
 {
     static const struct test_value {
         const char* str;
         validus_state kv;
-    } test_inputs[NUM_TEST_INPUTS] = {
+    } test_inputs[VALIDUS_CLI_SANITY_INPUTS] = {
         {"",
             {0, 0, 0xd3f0ad33, 0x79790917, 0x69135e44, 0xeb28aeda, 0x40e5423d, 0xd2e956e7}},
         {"abc",
@@ -191,7 +183,7 @@ int testsuite(void)
     bool all_pass = true;
     validus_state state = {0};
 
-    for (size_t n = 0; n < NUM_TEST_INPUTS; ++n) {
+    for (size_t n = 0; n < VALIDUS_CLI_SANITY_INPUTS; ++n) {
         validus_hash_string(&state, test_inputs[n].str);
         bool pass = validus_compare(&state, &test_inputs[n].kv);
         print_test_result(pass, &state, test_inputs[n].str);
