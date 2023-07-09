@@ -29,7 +29,6 @@
 #include "validus.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <inttypes.h>
 #include <string.h>
 #include <errno.h>
@@ -98,15 +97,6 @@ bool validus_hash_mem(validus_state* state, const void* mem, validus_word len);
  *                otherwise.
  */
 bool validus_hash_file(validus_state *state, const char *file);
-
-/**
- * @brief Compares two validus_state objects for equality.
- *
- * @param   one  Pointer to the left hand side of the comparison.
- * @param   two  Poitner to the right hand side of the comparision.
- * @returns bool `true` if both states are identical, `false` otherwise.
- */
-bool validus_compare(const validus_state *one, const validus_state *two);
 
 /**
  * @brief Convertes a validus_state to hexadecimal string form.

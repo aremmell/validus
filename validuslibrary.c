@@ -98,16 +98,6 @@ bool validus_hash_file(validus_state* state, const char* file) {
     return retval;
 }
 
-bool validus_compare(const validus_state* one, const validus_state* two)
-{
-    if (!one || !two)
-        return false;
-
-    return (one->f0 == two->f0 && one->f1 == two->f1 &&
-            one->f2 == two->f2 && one->f3 == two->f3 &&
-            one->f4 == two->f4 && one->f5 == two->f5);
-}
-
 bool validus_state_to_string(const validus_state* state, char* out, size_t len)
 {
     if (!state || !out || len < VALIDUS_FP_SIZE_O + 1)
