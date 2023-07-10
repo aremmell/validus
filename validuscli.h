@@ -28,6 +28,7 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdarg.h>
 
 # include "validus.h"
 # include "validuslibrary.h"
@@ -52,6 +53,7 @@
 # define VALIDUS_CLI_PERF_BLOCKSIZE (size_t)1e5
 
 #define VALIDUS_CLI_SANITY_INPUTS 8
+#define VALIDUS_CLI_MAX_ERROR     512
 
 ///////////////////////////////// macros ///////////////////////////////////////
 
@@ -65,5 +67,9 @@ int validus_cli_hash_file(const char* file);
 int validus_cli_hash_string(const char* string);
 int validus_cli_perf_test(void);
 int validus_cli_verify_sanity(void);
+
+//////////////////////////// internal functions ////////////////////////////////
+
+void _validus_cli_print_error(const char* format, ...);
 
 #endif /* ! _VALIDUS_CLI_H_INCLUDED */

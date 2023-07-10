@@ -182,7 +182,7 @@ build_validus() {
         ${_cmake} --build $(pwd)/build --clean-first --target validus
     fi
 
-    [[ -x "build/validus" ]] && build/validus -x
+    [[ -x "build/validus" ]] && build/validus -t
 }
 
 _args=($@)

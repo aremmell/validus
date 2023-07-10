@@ -27,8 +27,14 @@
 
 int main(int argc, char *argv[])
 {
+    /* Check argument count. */
+    if (argc < 2) {
+        _validus_cli_print_error("no argument supplied");
+        goto _print_usage;
+    }
+
     /* Print usage */
-    if (argc < 2 || strncmp(argv[1], VALIDUS_CLI_HELP, 2) == 0)
+    if (strncmp(argv[1], VALIDUS_CLI_HELP, 2) == 0)
         goto _print_usage;
 
     /* Hash string */
@@ -50,6 +56,8 @@ int main(int argc, char *argv[])
     /* Version info */
     if (strncmp(argv[1], VALIDUS_CLI_VER, 2) == 0)
         return validus_cli_print_ver();
+
+    _validus_cli_print_error("unknown argument: '%s'", argv[1]);
 
 _print_usage:
     return validus_cli_print_usage();
@@ -89,7 +97,7 @@ int validus_cli_hash_file(const char *file)
 int validus_cli_hash_string(const char *string)
 {
     if (!string || !*string) {
-        fprintf(stderr, VALIDUS_CLI_NAME": invalid string supplied; ignoring.\n");
+        _validus_cli_print_error("invalid string supplied; ignoring.");
         return EXIT_FAILURE;
     }
 
@@ -191,4 +199,19 @@ int validus_cli_verify_sanity(void)
     }
 
     return all_pass ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+void _validus_cli_print_error(const char* format, ...)
+{
+    if (!format || !*format)
+        return;
+
+    va_list args  = {0};
+    char buf[VALIDUS_CLI_MAX_ERROR] = {0};
+
+    va_start(args, format);
+    (void)vsnprintf(buf, VALIDUS_CLI_MAX_ERROR, format, args);
+
+    fprintf(stderr, "%s%s%s%s", ANSI_ESC"31m", VALIDUS_CLI_NAME": ", buf,
+        ANSI_ESC"0m" "\n");
 }
