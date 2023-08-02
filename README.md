@@ -1,6 +1,8 @@
-# Validus Hash
+# Validus One-Way Hash Function
 
-A high-throughput, yet beefy 192-bit OWHF written in (reasonably) portable C11/17.
+[![Build Status](https://app.travis-ci.com/aremmell/validus.svg?branch=master)](https://app.travis-ci.com/aremmell/validus)
+
+A high-throughput, yet beefy **192-bit** OWHF written in (*reasonably*) portable C11/17. 
 
 I know the world doesn't need another hash function; I began this project 19 years ago. Things were different then: CPUs were not even a hundredth of what they are now; ditto for disk and memory I/O. I had an idea after looking at the source code for Ronald Rivest's MD5 algorithm which is of course world-famous (and no longer used in any serious capacity due to security concerns/collisions/rainbow tables). Between us, I approached him with my idea, and he brushed me aside and said he's already working on something similar for "MD6." I'll let history speak for itself there.
 
