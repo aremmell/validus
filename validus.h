@@ -181,10 +181,9 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 #define VALIDUS_FP_SIZE_O 48
 
 /**
- * Boolean function to determine if address `a` is properly aligned on 32-bit
- * boundaries.
+ * Boolean function to determine if address `addr` is aligned on 4-byte boundaries.
  */
-#define WORDALIGNED(a) (((a - (const validus_word*)0) & 0x3) == 0)
+#define WORDALIGNED(addr) (((uintptr_t)(addr) & 0x3) == 0)
 
 /**
  * Swaps octet order of a 32-bit value `b` (represented as octets) and stores
