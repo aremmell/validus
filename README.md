@@ -46,7 +46,7 @@ validus -v: Display version information.
 validus -h: Show usage information.
 ```
 
-Most of these are self-explanatory. The `-t` option causes the algorithm to hash a known set of strings, with a predefined known correct output. If the output is green, Validus is working correctly; if it's red, something has gone wrong during compilation and it is probably a bug. Please file an issue if you encounter this situtaion!
+Most of these are self-explanatory. The `-t` option causes the algorithm to hash a known set of strings, with a predefined known correct output. If the output is green, Validus is working correctly; if it's red, something has gone wrong during compilation and it is probably a bug. Please file an issue if you encounter this situtation!
 
 ## Releases
 
