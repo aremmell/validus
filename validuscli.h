@@ -49,8 +49,8 @@
 
 # define VALIDUS_CLI_NAME "validus"
 
-# define VALIDUS_CLI_PERF_BLOCKS    (size_t)1e6
-# define VALIDUS_CLI_PERF_BLOCKSIZE (size_t)1e5
+# define VALIDUS_CLI_PERF_BLOCKS    1024ul * 1024ul
+# define VALIDUS_CLI_PERF_BLOCKSIZE 1024ul * 10ul
 
 #define VALIDUS_CLI_SANITY_INPUTS 8
 #define VALIDUS_CLI_MAX_ERROR     512

@@ -122,11 +122,11 @@ int validus_cli_perf_test(void)
     validus_get_local_time(&now, timebuf);
 
     printf(
-        VALIDUS_CLI_NAME" performance test: begin at %s; %zu %zu-byte blocks (%zu GB)...",
+        VALIDUS_CLI_NAME" perf test: begin at %s; %zu %zu-byte blocks (%zu GiB)...",
         timebuf,
         VALIDUS_CLI_PERF_BLOCKS,
         VALIDUS_CLI_PERF_BLOCKSIZE,
-        (VALIDUS_CLI_PERF_BLOCKS * VALIDUS_CLI_PERF_BLOCKSIZE) / 1000 / 1000 / 1000
+        (VALIDUS_CLI_PERF_BLOCKS * VALIDUS_CLI_PERF_BLOCKSIZE) / 1024ul / 1024ul / 1024ul
     );
     fflush(stdout);
 
@@ -142,14 +142,14 @@ int validus_cli_perf_test(void)
     validus_finalize(&state);
 
     float elapsed_msec = validus_timer_elapsed(&timer);
-    float bps = (float)(VALIDUS_CLI_PERF_BLOCKSIZE * VALIDUS_CLI_PERF_BLOCKSIZE)
+    float bps = (float)(VALIDUS_CLI_PERF_BLOCKS * VALIDUS_CLI_PERF_BLOCKSIZE)
         / (elapsed_msec / 1000.0f);
-    float mbs = (bps / 1000.0f) / 1000.0f;
+    float mbs = (bps / 1024.0f) / 1024.0f;
 
     time(&now);
     validus_get_local_time(&now, timebuf);
 
-    printf("done; end at %s.\nElapsed: %.03f seconds\nThroughput: %.2f MB/s\n"
+    printf("done at %s.\nElapsed: %.03f sec\nThroughput: %.2f MiB/sec\n"
            "Fingerprint: " VALIDUS_FP_FMT_SPEC "\n", timebuf, (elapsed_msec / 1e3),
            mbs, state.f0, state.f1, state.f2, state.f3, state.f4, state.f5);
 
@@ -158,10 +158,16 @@ int validus_cli_perf_test(void)
 
 void print_test_result(bool result, validus_state* state, const char* input) {
     const int color = result ? 32 : 31;
+    static const size_t longest_input = 12;
 
-    printf(ANSI_ESC "97m" VALIDUS_CLI_NAME" ['%s'] = "
-           ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, color,
-           state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+    char padding[longest_input] = {0};
+    size_t input_len = strnlen(input, longest_input);
+    for (size_t n = input_len, off = 0; n < longest_input; n++, off++)
+        padding[off] = ' ';
+
+    printf(ANSI_ESC "97m" VALIDUS_CLI_NAME" ['%s'] %s = "
+        ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, padding, color,
+        state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
 }
 
 int validus_cli_verify_sanity(void)
@@ -171,21 +177,21 @@ int validus_cli_verify_sanity(void)
         validus_state kv;
     } test_inputs[VALIDUS_CLI_SANITY_INPUTS] = {
         {"",
-            {0, 0, 0xd3f0ad33, 0x79790917, 0x69135e44, 0xeb28aeda, 0x40e5423d, 0xd2e956e7}},
+            {{0}, 0xd3f0ad33, 0x79790917, 0x69135e44, 0xeb28aeda, 0x40e5423d, 0xd2e956e7}},
         {"abc",
-            {0, 0, 0xf7ffabe5, 0x4ddb09a9, 0x3ebde51b, 0x90d1796a, 0x63ea3cc1, 0xa5ed093f}},
+            {{0}, 0xf7ffabe5, 0x4ddb09a9, 0x3ebde51b, 0x90d1796a, 0x63ea3cc1, 0xa5ed093f}},
         {"ABC",
-            {0, 0, 0x9c273091, 0x9216af67, 0xc3d9a325, 0x4401ade8, 0x5920b7c1, 0xd707c65d}},
+            {{0}, 0x9c273091, 0x9216af67, 0xc3d9a325, 0x4401ade8, 0x5920b7c1, 0xd707c65d}},
         {"validus",
-            {0, 0, 0xa16bbad7, 0x293dac29, 0x04cc1807, 0x6636125c, 0x2c68c29c, 0xcffa779d}},
+            {{0}, 0xa16bbad7, 0x293dac29, 0x04cc1807, 0x6636125c, 0x2c68c29c, 0xcffa779d}},
         {"1111111",
-            {0, 0, 0x4f7879df, 0xe986f48e, 0x047190fe, 0x0961783a, 0x177b6dc1, 0x9d5f30d1}},
+            {{0}, 0x4f7879df, 0xe986f48e, 0x047190fe, 0x0961783a, 0x177b6dc1, 0x9d5f30d1}},
         {"1111112",
-            {0, 0, 0x5f26b88d, 0xd4c24f7d, 0xe828d3ed, 0x18dc0a05, 0x45f26eb0, 0xc0b09061}},
+            {{0}, 0x5f26b88d, 0xd4c24f7d, 0xe828d3ed, 0x18dc0a05, 0x45f26eb0, 0xc0b09061}},
         {"hello, world",
-            {0, 0, 0xa54b0bad, 0xf8061b9b, 0x6f14c542, 0x0d2bd823, 0x9fbb7f67, 0x50b67af7}},
+            {{0}, 0xa54b0bad, 0xf8061b9b, 0x6f14c542, 0x0d2bd823, 0x9fbb7f67, 0x50b67af7}},
         {"dlrow ,olleh",
-            {0, 0, 0x3a39f172, 0xc900b9d8, 0x6efe31dd, 0xc065bdf9, 0xe02c4837, 0x50f9af86}}
+            {{0}, 0x3a39f172, 0xc900b9d8, 0x6efe31dd, 0xc065bdf9, 0xe02c4837, 0x50f9af86}}
     };
 
     bool all_pass = true;
