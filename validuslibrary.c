@@ -136,7 +136,6 @@ float validus_timer_elapsed(validus_timer* timer)
         return 0.0f;
     }
 
-    /* milliseconds */
     return (float)((now.ts.tv_sec * 1e3) + (now.ts.tv_nsec / 1e6) -
         (timer->ts.tv_sec * 1e3) + (timer->ts.tv_nsec / 1e6));
 #else /* __WIN__ */
