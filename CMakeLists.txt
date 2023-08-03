@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 # variables
 set(PROJECT_NAME validus)
+set(PROJECT_VERSION_TYPE "-dev")
 
 # policy settings, so CMake doesn't whine.
 cmake_policy(SET CMP0048 NEW) # project VERSION

@@ -77,8 +77,8 @@ int validus_cli_print_usage(void)
 
 int validus_cli_print_ver(void)
 {
-    printf(VALIDUS_CLI_NAME" v%"PRIu16".%"PRIu16".%"PRIu16"-%s\n",
-        VERSION_MAJ, VERSION_MIN, VERSION_BLD, GIT_COMMIT_HASH);
+    printf("%" PRIu16 ".%" PRIu16 ".%" PRIu16 "%s (%s)\n",
+        VERSION_MAJ, VERSION_MIN, VERSION_BLD, VERSION_TYPE, GIT_COMMIT_HASH);
     return EXIT_SUCCESS;
 }
 
