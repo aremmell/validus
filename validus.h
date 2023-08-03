@@ -216,7 +216,7 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 # define VALIDUS_FP_SIZE_B 192
 
 /** The size of a Validus fingerprint, in octets. */
-# define VALIDUS_FP_SIZE_O (VALIDUS_FP_SIZE_B / 8)
+# define VALIDUS_FP_SIZE_O 48
 
 /** Determines if address `addr` is aligned on 4-byte boundaries. */
 # define WORDALIGNED(addr) (((uintptr_t)(addr) & 0x3) == 0)
