@@ -84,6 +84,11 @@ int validus_cli_print_ver(void)
 
 int validus_cli_hash_file(const char *file)
 {
+    if (!file || !*file) {
+        _validus_cli_print_error("invalid file name supplied; ignoring.");
+        return EXIT_FAILURE;
+    }
+
     validus_state state = {0};
     if (!validus_hash_file(&state, file))
         return EXIT_FAILURE;
