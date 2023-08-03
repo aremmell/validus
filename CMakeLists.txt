@@ -4,7 +4,7 @@ cmake_minimum_required(
 
 # variables
 set(PROJECT_NAME validus)
-set(PROJECT_VERSION_TYPE "")
+set(PROJECT_VERSION_TYPE "-dev")
 
 # policy settings, so CMake doesn't whine.
 cmake_policy(SET CMP0048 NEW) # project VERSION
@@ -22,7 +22,7 @@ set(CMAKE_C_FLAGS_RELEASE "${C_FLAGS_BASE} -O3 -D_FORTIFY_SOURCE=2 -DNDEBUG")
 # define the project
 project(
     ${PROJECT_NAME}
-    VERSION 1.0.1
+    VERSION 1.0.2
     LANGUAGES C
     DESCRIPTION "Validus: 192-bit OWHF"
 )
