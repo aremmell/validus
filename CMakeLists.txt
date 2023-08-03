@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(
+    VERSION 3.0.0...3.27.0
+)
 
 # variables
 set(PROJECT_NAME validus)
+set(PROJECT_VERSION_TYPE "-dev")
 
 # policy settings, so CMake doesn't whine.
 cmake_policy(SET CMP0048 NEW) # project VERSION
@@ -12,7 +15,7 @@ cmake_policy(SET CMP0066 NEW) # CMAKE_<LANG>_FLAGS_<BUILDTYPE>
 cmake_policy(SET CMP0102 NEW) # mark_as_advanced
 
 # toolchain-related
-set(C_FLAGS_BASE  "-std=c17 -Wall -Wextra -Wpedantic -Werror -fPIC")
+set(C_FLAGS_BASE  "-std=c11 -Wall -Wextra -Wpedantic -Werror -fPIC")
 set(CMAKE_C_FLAGS_DEBUG "${C_FLAGS_BASE} -g3 -O0 -DDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${C_FLAGS_BASE} -O3 -D_FORTIFY_SOURCE=2 -DNDEBUG")
 
@@ -24,6 +27,7 @@ project(
     DESCRIPTION "Validus: 192-bit OWHF"
 )
 
+# get the git commit hash for use in the version header
 execute_process(
     COMMAND git rev-parse --short --verify HEAD
     OUTPUT_VARIABLE GIT_COMMIT_HASH

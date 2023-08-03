@@ -32,5 +32,6 @@ static const char* GIT_COMMIT_HASH = "${GIT_COMMIT_HASH}";
 static const uint16_t VERSION_MAJ  = ${PROJECT_VERSION_MAJOR};
 static const uint16_t VERSION_MIN  = ${PROJECT_VERSION_MINOR};
 static const uint16_t VERSION_BLD  = ${PROJECT_VERSION_PATCH};
+static const char* VERSION_TYPE    = "${PROJECT_VERSION_TYPE}";
 
 #endif /* ! _VALIDUS_VERSION_H_INCLUDED */

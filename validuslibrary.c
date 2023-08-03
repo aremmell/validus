@@ -60,11 +60,11 @@ bool validus_hash_file(validus_state* state, const char* file) {
     }
 
     validus_octet *buf  = (validus_octet*)calloc(sizeof(validus_octet),
-        VALIDUS_FILEBLOCKSIZE);
+        VALIDUS_FILE_BLOCKSIZE);
 
     if (!buf) {
         fprintf(stderr, "failed to allocate %zu octets of heap memory: %s\n",
-            sizeof(validus_octet) * VALIDUS_FILEBLOCKSIZE, strerror(errno));
+            sizeof(validus_octet) * VALIDUS_FILE_BLOCKSIZE, strerror(errno));
         fclose(f);
         f = NULL;
         return false;
@@ -75,7 +75,7 @@ bool validus_hash_file(validus_state* state, const char* file) {
 
     while (!feof(f) && !ferror(f)) {
         size_t result = fread((void*)buf, sizeof(validus_octet),
-            VALIDUS_FILEBLOCKSIZE, f);
+            VALIDUS_FILE_BLOCKSIZE, f);
 
         if (0 != result)
             validus_append(state, buf, result);
@@ -136,7 +136,6 @@ float validus_timer_elapsed(validus_timer* timer)
         return 0.0f;
     }
 
-    /* milliseconds */
     return (float)((now.ts.tv_sec * 1e3) + (now.ts.tv_nsec / 1e6) -
         (timer->ts.tv_sec * 1e3) + (timer->ts.tv_nsec / 1e6));
 #else /* __WIN__ */
@@ -154,9 +153,17 @@ float validus_timer_elapsed(validus_timer* timer)
 #endif
 }
 
-void validus_get_local_time(const time_t* when, char out[256])
+const char* validus_get_local_time(void)
 {
-    struct tm* lt = localtime(when);
-    if (lt)
-        strftime(out, 256, "%T", lt);
+    static char buf[256] = {0};
+
+    time_t now = time(NULL);
+    struct tm* lt = localtime(&now);
+
+    memset(buf, 0, sizeof(buf));
+
+    if (lt && 0 != strftime(buf, sizeof(buf), "%T", lt))
+        return &buf[0];
+
+    return "";
 }

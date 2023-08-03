@@ -51,7 +51,7 @@ void validus_append(validus_state* state, const void* data, validus_word len)
 
     state->bits[1] += (len >> 29);
 
-    if (((state->bits[0] += (len << 3)) < (len << 3)))
+    if ((state->bits[0] += (len << 3)) < (len << 3))
         state->bits[1]++;
 
     while ((left = (len - done))) {
@@ -131,7 +131,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     blk32 = stk;
 #else
     if (!WORDALIGNED(blk32)) {
-        memcpy(stk, blk32, VALIDUS_FP_SIZE_B);
+        memcpy(stk, blk32, VALIDUS_FP_SIZE_O);
         blk32 = stk;
     }
 #endif
