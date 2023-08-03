@@ -45,7 +45,7 @@ configure_file(
 add_executable(
     ${PROJECT_NAME}
     validus.c
-    validuslibrary.c
+    validusutil.c
     validuscli.c
 )
 
