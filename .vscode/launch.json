@@ -17,9 +17,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/validus",
             "args": [
-              "-t",
-               /* "",
-                "" */
+              "-t"
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
