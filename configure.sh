@@ -19,7 +19,7 @@ get_cmake_version() {
         local _minor=${BASH_REMATCH[2]}
         local _patch=${BASH_REMATCH[3]}
 
-        eval $2'=("${_major}" "${_minor}" "${_patch}")'
+        eval "${2}"'=("${_major}" "${_minor}" "${_patch}")'
         return 0
     fi
 
@@ -42,7 +42,7 @@ numeric_compare() {
         _ret=1
     fi
 
-    eval $3'="${_ret}"'
+    eval "${3}"'="${_ret}"'
 }
 
 # $1 = version number array from get_cmake_version.
@@ -138,8 +138,8 @@ select_cmake_binary() {
     fi
 
     echo "Using cmake = ${_binary}"
-    eval $1'="${_binary}"'
-    eval $2'=("${_ver[@]}")'
+    eval "${1}"'="${_binary}"'
+    eval "${2}"'=("${_ver[@]}")'
 }
 
 build_validus() {
