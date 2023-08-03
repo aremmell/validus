@@ -30,6 +30,7 @@
 #include <stdbool.h>
 
 ///////////////////////////// preprocessor /////////////////////////////////////
+
 #if defined(__linux__)  || defined(__GNU__)    || defined(__CYGWIN__) || \
     defined(__GLIBC__)  || defined(__HAIKU__)  || defined(__APPLE__)
 # if defined(__APPLE__)
