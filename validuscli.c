@@ -126,7 +126,7 @@ int validus_cli_perf_test(void)
     memset(block, 0xee, sizeof(validus_octet) * VALIDUS_CLI_PERF_BLKSIZE);
 
     printf(
-        VALIDUS_CLI_NAME" perf test: begin at %s: %zu %zu-byte blocks (%zu GiB)...",
+        VALIDUS_CLI_NAME" perf test: begin at %s: %lu %lu-byte blocks (%lu GiB)...",
         validus_get_local_time(),
         VALIDUS_CLI_PERF_BLKS,
         VALIDUS_CLI_PERF_BLKSIZE,
@@ -214,11 +214,12 @@ void _validus_cli_print_error(const char* format, ...)
     if (!format || !*format)
         return;
 
-    va_list args  = {0};
     char buf[VALIDUS_CLI_MAX_ERROR] = {0};
 
+    va_list args;
     va_start(args, format);
     (void)vsnprintf(buf, VALIDUS_CLI_MAX_ERROR, format, args);
+    va_end(args);
 
     fprintf(stderr, "%s%s%s%s", ANSI_ESC "31m", VALIDUS_CLI_NAME ": ", buf,
         ANSI_ESC "0m\n");
