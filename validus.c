@@ -131,7 +131,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     blk32 = stk;
 #else
     if (!WORDALIGNED(blk32)) {
-        memcpy(stk, blk32, VALIDUS_FP_SIZE_B);
+        memcpy(stk, blk32, VALIDUS_FP_SIZE_O);
         blk32 = stk;
     }
 #endif

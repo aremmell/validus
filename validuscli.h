@@ -49,15 +49,13 @@
 
 # define VALIDUS_CLI_NAME "validus"
 
+# define ANSI_ESC "\x1b["
+
 # define VALIDUS_CLI_PERF_BLKS    1024ul * 1024ul
 # define VALIDUS_CLI_PERF_BLKSIZE 1024ul * 10ul
 
 # define VALIDUS_CLI_SANITY_INPUTS 8
 # define VALIDUS_CLI_MAX_ERROR     512
-
-///////////////////////////////// macros ///////////////////////////////////////
-
-# define ANSI_ESC "\x1b["
 
 /////////////////////////// function exports ///////////////////////////////////
 
@@ -72,4 +70,4 @@ int validus_cli_verify_sanity(void);
 
 void _validus_cli_print_error(const char* format, ...);
 
-#endif /* ! _VALIDUS_CLI_H_INCLUDED */
+#endif /* !_VALIDUS_CLI_H_INCLUDED */

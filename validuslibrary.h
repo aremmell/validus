@@ -24,23 +24,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #ifndef _VALIDUS_LIBRARY_H_INCLUDED
-#define _VALIDUS_LIBRARY_H_INCLUDED
+# define _VALIDUS_LIBRARY_H_INCLUDED
 
-#include "validus.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <inttypes.h>
-#include <string.h>
-#include <errno.h>
-#include <time.h>
+# include "validus.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <inttypes.h>
+# include <string.h>
+# include <errno.h>
+# include <time.h>
 
-#if defined(_WIN32)
-# define WIN32_LEAN_AND_MEAN
-# define WINVER       0x0A00
-# define _WIN32_WINNT 0x0A00
-# include <windows.h>
-# define __WIN__
-#endif
+# if defined(_WIN32)
+#  define WIN32_LEAN_AND_MEAN
+#  define WINVER       0x0A00
+#  define _WIN32_WINNT 0x0A00
+#  include <windows.h>
+#  define __WIN__
+# endif
 
 /**
  * @defgroup util Utility
@@ -55,20 +55,20 @@
 ///////////////////////////////// macros ///////////////////////////////////////
 
 /** The size, in octets used to read blocks of data from a file. */
-#define VALIDUS_FILE_BLOCKSIZE 8192
+# define VALIDUS_FILE_BLOCKSIZE 8192ul
 
 /** The maximum size, in octets of a string to hash. */
-#define VALIDUS_MAX_STRING 2048
+# define VALIDUS_MAX_STRING 2048ul
 
 /** Format specifier string for a Validus fingerprint. */
-#define VALIDUS_FP_FMT_SPEC \
+# define VALIDUS_FP_FMT_SPEC \
     "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32
 
 //////////////////////////// function exports //////////////////////////////////
 
-#ifdef __cplusplus
+# ifdef __cplusplus
 extern "C" {
-#endif
+# endif
 
 /**
  * @brief Hashes a string.
@@ -111,7 +111,7 @@ bool validus_hash_mem(validus_state* state, const void* mem, validus_word len);
 bool validus_hash_file(validus_state *state, const char *file);
 
 /**
- * @brief Convertes a validus_state to hexadecimal string form.
+ * @brief Converts a validus_state to hexadecimal string form.
  *
  * @param   state Pointer to the validus_state to convert.
  * @param   out   Pointer to a buffer to receive the formatted string.
@@ -155,8 +155,8 @@ float validus_timer_elapsed(validus_timer* timer);
 /** Returns the local time, formatted as a string. */
 const char* validus_get_local_time(void);
 
-#ifdef __cplusplus
+# ifdef __cplusplus
 }
-#endif
+# endif
 
 #endif /* !_VALIDUS_LIBRARY_H_INCLUDED */
