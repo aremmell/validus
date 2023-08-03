@@ -18,8 +18,8 @@
             "program": "${workspaceFolder}/build/validus",
             "args": [
               "-t",
-                "",
-                /*"" */
+               /* "",
+                "" */
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
