@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+############################################################
+# Copyright (C) 2023 Ryan M. Lederman <lederman@gmail.com> #
+# License: MIT                                             #
+############################################################
+
 # $1 = the path to cmake
 # $2 = the name of a variable to receive
 # an array containing the version segments

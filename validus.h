@@ -1,10 +1,14 @@
-/*
- * validus.h
+/**
+ * @file validus.h
+ * @brief Definitions for the Validus hash function.
  *
- * Author:    Ryan M. Lederman <lederman@gmail.com>
- * Copyright: Copyright (c) 2004-2023
- * Version:   1.0.1
- * License:   The MIT License (MIT)
+ * Configures the build, defines types, macros, constants, and functions
+ * that comprise the core of Validus.
+ *
+ * @author    Ryan M. Lederman \<lederman@gmail.com\>
+ * @date      2004-2023
+ * @version   1.0.1
+ * @copyright The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +30,7 @@
 #ifndef _VALIDUS_H_INCLUDED
 # define _VALIDUS_H_INCLUDED
 
+# include <stdlib.h>
 # include <stdint.h>
 # include <stdbool.h>
 
@@ -90,7 +95,7 @@
 # endif
 
 /**
- * @defgroup core Core Functionality
+ * @defgroup core Core
  *
  * The heart of the Validus hash function.
  *
@@ -103,16 +108,18 @@
 
 /////////////////////////////// typedefs ///////////////////////////////////////
 
-typedef uint8_t  validus_octet; /**< Validus octet/byte (8-bit). */
+typedef uint8_t  validus_octet; /**< Validus byte (8-bit). */
 typedef uint32_t validus_word;  /**< Validus word (32-bit). */
-typedef int32_t  validus_int;   /**< Validus integer (32-bit). */
 
 /**
  * @struct validus_state
- * @brief Represents the state of a Validus hash operation.
+ * @brief Represents the state of an individual Validus hash operation.
+ *
+ * Contains the working state of a hash operation (i.e. the fingerprint and
+ * state data). Not valid for examination until ::validus_finalize is called.
  */
 typedef struct {
-    validus_word bits[2]; /**< 64-bit bit counter. */
+    validus_word bits[2]; /**< 64-bit counter. */
     validus_word f0;      /**< Fingerprint word 0. */
     validus_word f1;      /**< Fingerprint word 1. */
     validus_word f2;      /**< Fingerprint word 2. */
@@ -153,7 +160,7 @@ void validus_init(validus_state* state);
  * @param data  Pointer to a new block of data to process.
  * @param len   Length of `data` in octets.
  */
-void validus_append(validus_state* state, const void* data, validus_word len);
+void validus_append(validus_state* state, const void* data, size_t len);
 
 /**
  * @brief Finalizes a Validus hashing operation.
@@ -190,7 +197,10 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 }
 # endif
 
-/** @} @} */
+/**
+ * @}
+ * @}
+ */
 
 ////////////////////////////////// macros //////////////////////////////////////
 
@@ -260,15 +270,15 @@ void _validus_process(validus_state* state, const validus_word* blk32);
     a = ROR(t + blk, r2);                           \
 }
 
-/** Initial state values. */
-# define VALIDUS_INIT_0  0x81010881  /* 10000001000000010000100010000001 */
-# define VALIDUS_INIT_1  0xA529298B  /* 10100101001010010010100110001011 */
-# define VALIDUS_INIT_2  0x66AC654A  /* 01100110101011000110010101001010 */
-# define VALIDUS_INIT_3  0x52865650  /* 01010010100001100101011001010000 */
-# define VALIDUS_INIT_4  0x18529234  /* 00011000010100101001001000110100 */
-# define VALIDUS_INIT_5  0x08508024  /* 00001000010100001000000000100100 */
+/* Initial state values. */
+# define VALIDUS_INIT_0  0x81010881  /**< 10000001000000010000100010000001 */
+# define VALIDUS_INIT_1  0xA529298B  /**< 10100101001010010010100110001011 */
+# define VALIDUS_INIT_2  0x66AC654A  /**< 01100110101011000110010101001010 */
+# define VALIDUS_INIT_3  0x52865650  /**< 01010010100001100101011001010000 */
+# define VALIDUS_INIT_4  0x18529234  /**< 00011000010100101001001000110100 */
+# define VALIDUS_INIT_5  0x08508024  /**< 00001000010100001000000000100100 */
 
-/** Constants used in compression functions. */
+/* Constants used in compression functions. */
 # define VALIDUS_0   0x4528A03E
 # define VALIDUS_1   0xCABBB352
 # define VALIDUS_2   0x8147ED07
@@ -462,6 +472,9 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 # define VALIDUS_190 0x991D4C51
 # define VALIDUS_191 0x885588BD
 
-/** @} @} */
+/**
+ * @}
+ * @}
+ */
 
 #endif /* !_VALIDUS_H_INCLUDED */

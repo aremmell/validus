@@ -1,10 +1,13 @@
-/*
- * validuslibrary.h
+/**
+ * @file validusutil.h
+ * @brief Definitions of the Validus utility functions.
  *
- * Author:    Ryan M. Lederman <lederman@gmail.com>
- * Copyright: Copyright (c) 2004-2023
- * Version:   1.0.1
- * License:   The MIT License (MIT)
+ * Defines the functions utilized by the Validus CLI application.
+ *
+ * @author    Ryan M. Lederman \<lederman@gmail.com\>
+ * @date      2004-2023
+ * @version   1.0.1
+ * @copyright The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,8 +26,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef _VALIDUS_LIBRARY_H_INCLUDED
-# define _VALIDUS_LIBRARY_H_INCLUDED
+#ifndef _VALIDUS_UTIL_H_INCLUDED
+# define _VALIDUS_UTIL_H_INCLUDED
 
 # include "validus.h"
 # include <stdio.h>
@@ -90,7 +93,7 @@ bool validus_hash_string(validus_state* state, const char* string);
  * @param   len   Length of `mem` in octets.
  * @returns bool `true` if input parameters are valid, `false` otherwise.
  */
-bool validus_hash_mem(validus_state* state, const void* mem, validus_word len);
+bool validus_hash_mem(validus_state* state, const void* mem, size_t len);
 
 /**
  * @brief Hashes a file.
@@ -121,7 +124,7 @@ bool validus_hash_file(validus_state *state, const char *file);
  */
 bool validus_state_to_string(const validus_state *state, char *out, size_t len);
 
-/** @} !util */
+/** @} */
 
 ////////////////////////// internal functions //////////////////////////////////
 
@@ -159,4 +162,4 @@ const char* validus_get_local_time(void);
 }
 # endif
 
-#endif /* !_VALIDUS_LIBRARY_H_INCLUDED */
+#endif /* !_VALIDUS_UTIL_H_INCLUDED */

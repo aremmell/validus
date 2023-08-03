@@ -1,10 +1,11 @@
-/*
- * validuscli.h
+/**
+ * @file validuscli.h
+ * @brief Definitions for the Validus CLI application.
  *
- * Author:    Ryan M. Lederman <lederman@gmail.com>
- * Copyright: Copyright (c) 2018-2023
- * Version:   1.0.1
- * License:   The MIT License (MIT)
+ * @author    Ryan M. Lederman \<lederman@gmail.com\>
+ * @date      2004-2023
+ * @version   1.0.1
+ * @copyright The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -30,8 +31,7 @@
 # include <stdlib.h>
 # include <stdarg.h>
 
-# include "validus.h"
-# include "validuslibrary.h"
+# include "validusutil.h"
 # include <version.h>
 
 # if defined(_WIN32)

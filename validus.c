@@ -1,10 +1,13 @@
-/*
- * validus.c
+/**
+ * @file validus.c
+ * @brief Implementation of the Validus hash function.
  *
- * Author:    Ryan M. Lederman <lederman@gmail.com>
- * Copyright: Copyright (c) 2004-2023
- * Version:   1.0.1
- * License:   The MIT License (MIT)
+ * Implements the functions that comprise the core of Validus.
+ *
+ * @author    Ryan M. Lederman \<lederman@gmail.com\>
+ * @date      2004-2023
+ * @version   1.0.1
+ * @copyright The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -40,7 +43,7 @@ void validus_init(validus_state* state)
     state->f5 = VALIDUS_INIT_5;
 }
 
-void validus_append(validus_state* state, const void* data, validus_word len)
+void validus_append(validus_state* state, const void* data, size_t len)
 {
     if (!state || !data || len == 0)
         return;
@@ -126,7 +129,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word stk[VALIDUS_FP_SIZE_O];
 
 #ifdef VALIDUS_BIG_ENDIAN
-    for(validus_int n = VALIDUS_FP_SIZE_O - 1; n >= 0; n--)
+    for(size_t n = VALIDUS_FP_SIZE_O - 1; n >= 0; n--)
         OCTETSWAP(stk[n], ((validus_octet*)&blk32[n]));
     blk32 = stk;
 #else

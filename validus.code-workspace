@@ -8,7 +8,8 @@
 		"files.associations": {
 			"validus.h": "c",
 			"validuslibrary.h": "c",
-			"validuscli.h": "c"
+			"validuscli.h": "c",
+			"validusutil.h": "c"
 		}
 	}
 }

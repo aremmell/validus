@@ -1,10 +1,13 @@
-/*
- * validuslibrary.c
+/**
+ * @file validusutil.c
+ * @brief Implementation of Validus utility functions.
  *
- * Author:    Ryan M. Lederman <lederman@gmail.com>
- * Copyright: Copyright (c) 2004-2023
- * Version:   1.0.1
- * License:   The MIT License (MIT)
+ * Implements the functions utilized by the Validus CLI application.
+ *
+ * @author    Ryan M. Lederman \<lederman@gmail.com\>
+ * @date      2004-2023
+ * @version   1.0.1
+ * @copyright The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,7 +26,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include "validuslibrary.h"
+#include "validusutil.h"
 
 bool validus_hash_string(validus_state* state, const char* string)
 {
@@ -37,7 +40,7 @@ bool validus_hash_string(validus_state* state, const char* string)
     return true;
 }
 
-bool validus_hash_mem(validus_state* state, const void* mem, validus_word len)
+bool validus_hash_mem(validus_state* state, const void* mem, size_t len)
 {
     if (!state || !mem || len == 0)
         return false;
