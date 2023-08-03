@@ -9,7 +9,7 @@ A high-throughput, yet beefy 192-bit OWHF written in (*reasonably*) portable C11
 - [Disclaimer](#disclaimer)
 - [Building from source](#building-from-source)
 - [CLI Interface](#cli-interface)
-- <u>[Full Documentation](https://validus.rml.dev)</u>
+- [Full Documentation](#full-documentation)
 - [Releases](#releases)
 - [Latin](#latin)
 
@@ -52,6 +52,10 @@ validus usage:
 ```
 
 Most of these are self-explanatory. The `-t` option causes the algorithm to hash a known set of strings, with a predefined known correct output. If the output is green, Validus is working correctly; if it's red, something has gone wrong during compilation and it is probably a bug. Please [file an issue](https://github.com/aremmell/validus/issues/new) if you encounter this situtation!
+
+## <a id="full-documentation" /> Full Documentation
+
+Thanks to Doxygen, Validus has a [dedicated documentation site](https://validus.rml.dev).
 
 ## <a id="releases" /> Releases
 
