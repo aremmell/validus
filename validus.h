@@ -118,10 +118,15 @@ extern "C" {
 /**
  * @brief Initializes a validus_state object.
  *
- * @note Must be called before ::validus_append.
- * @note If `state` is NULL, this function will return early and have no effect.
+ * Fills the `state` structure with initial values and prepares it for use
+ * with ::validus_append, and ::validus_finalize.
  *
- * @param state Pointer to the validus_state object to initialize.
+ * @note Must be called before any other Validus function that takes a
+ * ::validus_state input argument.
+ *
+ * @note If `state` is NULL, will simply return and become an effective NOOP.
+ *
+ * @param state Pointer to the ::validus_state object to initialize.
  */
 void validus_init(validus_state* state);
 

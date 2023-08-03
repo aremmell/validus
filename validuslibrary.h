@@ -42,21 +42,33 @@
 # define __WIN__
 #endif
 
-/** The size, in octets that is used to read chunks of data from a file. */
-#define VALIDUS_FILEBLOCKSIZE 8192
+/**
+ * @defgroup util Utility
+ *
+ * Utility wrappers around the core Validus implementation. Provides functions
+ * for hashing files, strings, and blocks of memory, etc.
+ *
+ * @addtogroup util
+ * @{
+ */
 
-/** The maximum allowable size of a string, in octets. */
+///////////////////////////////// macros ///////////////////////////////////////
+
+/** The size, in octets used to read blocks of data from a file. */
+#define VALIDUS_FILE_BLOCKSIZE 8192
+
+/** The maximum size, in octets of a string to hash. */
 #define VALIDUS_MAX_STRING 2048
 
 /** Format specifier string for a Validus fingerprint. */
 #define VALIDUS_FP_FMT_SPEC \
-    "%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32"%08"PRIx32
+    "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32 "%08" PRIx32
+
+//////////////////////////// function exports //////////////////////////////////
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//////////////////////////// function exports //////////////////////////////////
 
 /**
  * @brief Hashes a string.
@@ -64,7 +76,7 @@ extern "C" {
  * @param   state  Pointer to a validus_state object which will contain the
  *                 results of the operation upon success.
  * @param   string Pointer to the string to hash. Will be read up until the first
- *                 null terminator, or VALIDUS_MAX_STRING, whichever comes first.
+ *                 null terminator, or VALIDUS_MAX_STRING; whichever comes first.
  * @returns bool   `true` if input parameters are valid, `false` otherwise.
  */
 bool validus_hash_string(validus_state* state, const char* string);
@@ -87,7 +99,7 @@ bool validus_hash_mem(validus_state* state, const void* mem, validus_word len);
  * to the current working directory. This may or may not be the same directory
  * that this program resides in.
  *
- * @note The preprocessor macro VALIDUS_FILEBLOCKSIZE may be modified at compile
+ * @note The preprocessor macro VALIDUS_FILE_BLOCKSIZE may be modified at compile
  * time to suit your needs if the default value (8 KiB) is insufficient.
  *
  * @param   state Pointer to a validus_state object which will contain the
@@ -109,22 +121,42 @@ bool validus_hash_file(validus_state *state, const char *file);
  */
 bool validus_state_to_string(const validus_state *state, char *out, size_t len);
 
+/** @} !util */
+
 ////////////////////////// internal functions //////////////////////////////////
 
+/** A platform-dependent timer used for performance measurement. */
 typedef struct {
 #if defined(__WIN__)
-    FILETIME ft;
+    FILETIME ft;        /**< The timer type on Windows. */
 #else
-    struct timespec ts;
+    struct timespec ts; /**< The timer type on *nix */
 #endif
 } validus_timer;
 
+/**
+ * @brief Starts a validus_timer.
+ *
+ * @param timer Pointer to the validus_timer which should be initialized to the
+ *              chosen clock's current value.
+ */
 void validus_timer_start(validus_timer* timer);
+
+/**
+ * @brief Returns the milliseconds that have elapsed since `timer` was started.
+ *
+ * @param timer Pointer to the validus_timer which should be examined
+ *              for its elapsed time.
+ * @returns float The number of milliseconds that have elapsed since
+ *                ::validus_timer_start was called for `timer`.
+ */
 float validus_timer_elapsed(validus_timer* timer);
-void validus_get_local_time(const time_t* when, char out[256]);
+
+/** Returns the local time, formatted as a string. */
+const char* validus_get_local_time(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _VALIDUS_LIBRARY_H_INCLUDED */
+#endif /* !_VALIDUS_LIBRARY_H_INCLUDED */
