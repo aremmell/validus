@@ -51,7 +51,7 @@ void validus_append(validus_state* state, const void* data, validus_word len)
 
     state->bits[1] += (len >> 29);
 
-    if (((state->bits[0] += (len << 3)) < (len << 3)))
+    if ((state->bits[0] += (len << 3)) < (len << 3))
         state->bits[1]++;
 
     while ((left = (len - done))) {
