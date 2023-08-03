@@ -9,6 +9,7 @@ A high-throughput, yet beefy 192-bit OWHF written in (*reasonably*) portable C11
 - [Disclaimer](#disclaimer)
 - [Building from source](#building-from-source)
 - [CLI Interface](#cli-interface)
+- <u>[Full Documentation](https://validus.rml.dev)</u>
 - [Releases](#releases)
 - [Latin](#latin)
 
