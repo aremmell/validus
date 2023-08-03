@@ -129,7 +129,7 @@ void _validus_process(validus_state* state, const validus_word* blk32)
     validus_word stk[VALIDUS_FP_SIZE_O];
 
 #ifdef VALIDUS_BIG_ENDIAN
-    for(size_t n = VALIDUS_FP_SIZE_O - 1; n >= 0; n--)
+    for(int32_t n = VALIDUS_FP_SIZE_O - 1; n >= 0; n--)
         OCTETSWAP(stk[n], ((validus_octet*)&blk32[n]));
     blk32 = stk;
 #else
