@@ -233,16 +233,16 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 # define ROR(a, b) (((a) >> (b)) | ((a) << (32 - b)))
 
 /** Mixer function 0. */
-# define M0(a, b, c, d, e) ((((a) & (b)) ^ ((c) & (d)  ^ (e))))
+# define M0(a, b, c, d, e) ((((a) & (b)) ^ ((c) & (d) ^ (e))))
 
 /** Mixer function 1. */
-# define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c)  & (d)  ^ (e))))
+# define M1(a, b, c, d, e) ((((a) & (b)) ^ ((b) ^ (c) & (d) ^ (e))))
 
 /** Mixer function 2. */
-# define M2(a, b, c, d, e) (((a)  & ((b) ^ (c)) ^ ~(d) & (e)  ^ (c)))
+# define M2(a, b, c, d, e) (((a)  & ((b) ^ (c)) ^ ~(d) & (e) ^ (c)))
 
 /** Mixer function 3. */
-# define M3(a, b, c, d, e) ((((a) & (b)) ^ (c)  & ((d) ^ (e)) ^ (e)))
+# define M3(a, b, c, d, e) ((((a) & (b)) ^ (c) & ((d) ^ (e)) ^ (e)))
 
 /** Compression function 0. */
 # define VC_0(a, b, c, d, e, f, r1, r2, blk, hcv) { \
