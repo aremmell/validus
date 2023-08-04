@@ -27,11 +27,10 @@
 #ifndef _VALIDUS_CLI_H_INCLUDED
 # define _VALIDUS_CLI_H_INCLUDED
 
+# include "validusutil.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdarg.h>
-
-# include "validusutil.h"
 # include <version.h>
 
 # if defined(_WIN32)
