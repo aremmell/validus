@@ -51,8 +51,8 @@
 
 # define ANSI_ESC "\x1b["
 
-# define VALIDUS_CLI_PERF_BLKS    1024ul * 1024ul
-# define VALIDUS_CLI_PERF_BLKSIZE 1024ul * 10ul
+# define VALIDUS_CLI_PERF_BLKS    (1024ull * 1024ull)
+# define VALIDUS_CLI_PERF_BLKSIZE (1024ull * 10ull)
 
 # define VALIDUS_CLI_SANITY_INPUTS 8
 # define VALIDUS_CLI_MAX_ERROR     512

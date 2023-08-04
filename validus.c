@@ -49,15 +49,15 @@ void validus_append(validus_state* state, const void* data, size_t len)
         return;
 
     const validus_word* ptr = (const validus_word*)data;
-    validus_word left       = 0;
-    validus_word done       = 0;
+    size_t left             = len;
+    size_t done             = 0;
 
-    state->bits[1] += (len >> 29);
+    state->bits[1] += (validus_word)(len >> 29);
 
-    if (((state->bits[0] += (len << 3)) < (len << 3)))
+    if (((state->bits[0] += (validus_word)(len << 3)) < (len << 3)))
         state->bits[1]++;
 
-    while ((left = (len - done))) {
+    while (left > 0) {
         if (left >= VALIDUS_FP_SIZE_B) {
             _validus_process(state, ptr);
             done += VALIDUS_FP_SIZE_B;
@@ -69,6 +69,7 @@ void validus_append(validus_state* state, const void* data, size_t len)
             _validus_process(state, stk);
             done += left;
         }
+        left = len - done;
     }
 }
 
@@ -101,7 +102,7 @@ void validus_finalize(validus_state* state)
     memcpy(&finish[184], &state->bits[1], 4);
     memcpy(&finish[188], &state->bits[0], 4);
 
-    _validus_process(state, (validus_word*)finish);
+    _validus_process(state, (validus_word*)&finish[0]);
 }
 
 bool validus_compare(const validus_state* one, const validus_state* two)

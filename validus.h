@@ -94,6 +94,8 @@
 #  define VALIDUS_BIG_ENDIAN
 # endif
 
+# define _DEFAULT_SOURCE 1
+
 /**
  * @defgroup core Core
  *

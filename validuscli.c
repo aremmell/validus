@@ -126,11 +126,11 @@ int validus_cli_perf_test(void)
     memset(block, 0xee, sizeof(validus_octet) * VALIDUS_CLI_PERF_BLKSIZE);
 
     printf(
-        VALIDUS_CLI_NAME" perf test: begin at %s: %lu %lu-byte blocks (%lu GiB)...",
+        VALIDUS_CLI_NAME" perf test: begin at %s: %llu %llu-byte blocks (%llu GiB)...",
         validus_get_local_time(),
         VALIDUS_CLI_PERF_BLKS,
         VALIDUS_CLI_PERF_BLKSIZE,
-        ((VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE) / 1024ul / 1024ul / 1024ul)
+        ((VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE) / 3072ull)
     );
     fflush(stdout);
 
@@ -146,9 +146,9 @@ int validus_cli_perf_test(void)
     validus_finalize(&state);
 
     float elapsed_msec = validus_timer_elapsed(&timer);
-    float bps = (float)(VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE)
-        / (elapsed_msec / 1000.0f);
-    float mbs = bps / 1024.0f / 1024.0f;
+    double bps = (double)(VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE)
+        / (elapsed_msec / 1000.0);
+    double mbs = bps / 1024.0 / 1024.0;
 
     printf(" done at %s:\n\telapsed: %.03f sec\n\tthroughput: %.2f MiB/sec\n\t"
            "fingerprint: " VALIDUS_FP_FMT_SPEC "\n", validus_get_local_time(),
@@ -162,14 +162,18 @@ void print_test_result(bool result, validus_state* state, const char* input) {
     const int color = result ? 32 : 31;
     static const size_t longest_input = 12;
 
-    char padding[longest_input + 1] = {0};
-    size_t input_len = strnlen(input, longest_input);
-    for (size_t n = input_len, off = 0; n < longest_input; n++, off++)
-        padding[off] = ' ';
+    char* padding = calloc(longest_input + 1, sizeof(char));
+    if (padding) {
+        size_t input_len = strnlen(input, longest_input);
+        for (size_t n = input_len, off = 0; n < longest_input; n++, off++)
+            padding[off] = ' ';
 
-    printf(ANSI_ESC "97m" VALIDUS_CLI_NAME " ['%s']%s = "
-        ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, padding, color,
-        state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+        printf(ANSI_ESC "97m" VALIDUS_CLI_NAME " ['%s']%s = "
+            ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, padding, color,
+            state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
+
+        free(padding);
+    }
 }
 
 int validus_cli_verify_sanity(void)
