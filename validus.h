@@ -30,10 +30,6 @@
 #ifndef _VALIDUS_H_INCLUDED
 # define _VALIDUS_H_INCLUDED
 
-# include <stdlib.h>
-# include <stdint.h>
-# include <stdbool.h>
-
 ///////////////////////////// preprocessor /////////////////////////////////////
 
 # if defined(__linux__)  || defined(__GNU__)    || defined(__CYGWIN__) || \
@@ -95,6 +91,10 @@
 # endif
 
 # define _DEFAULT_SOURCE 1
+
+# include <stdlib.h>
+# include <stdint.h>
+# include <stdbool.h>
 
 /**
  * @defgroup core Core
