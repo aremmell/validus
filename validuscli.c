@@ -162,12 +162,12 @@ void print_test_result(bool result, validus_state* state, const char* input) {
     const int color = result ? 32 : 31;
     static const size_t longest_input = 12;
 
-    char padding[longest_input] = {0};
+    char padding[longest_input + 1] = {0};
     size_t input_len = strnlen(input, longest_input);
     for (size_t n = input_len, off = 0; n < longest_input; n++, off++)
         padding[off] = ' ';
 
-    printf(ANSI_ESC "97m" VALIDUS_CLI_NAME " ['%s'] %s = "
+    printf(ANSI_ESC "97m" VALIDUS_CLI_NAME " ['%s']%s = "
         ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, padding, color,
         state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
 }
