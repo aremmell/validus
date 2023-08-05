@@ -40,11 +40,11 @@ CMake: there's a presets file, and Ninja is set as the default build tool. If yo
 
 ### <a id="build-products" /> Build products
 
-Upon a successful build, the following are created:
+Upon a successful build, the following are created[^1]:
 
 - `build/validus`: CLI application
-- `build/libvalidus.a`: Static library[^1]
-- `build/libvalidus.so`: Shared library[^1]
+- `build/libvalidus.a`: Static library
+- `build/libvalidus.so`: Shared library
 
 [^1]: The exact filenames and extensions are platform-dependent. For example, on Windows, you will get
 `validus.exe`, `validus_static.lib` and `validus_shared.dll`.
