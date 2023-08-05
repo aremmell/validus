@@ -8,6 +8,7 @@ A high-throughput, yet beefy 192-bit OWHF written in (*reasonably*) portable C11
 - [TL;DR](#tldr)
 - [Disclaimer](#disclaimer)
 - [Building from source](#building-from-source)
+  - [Build products](#build-products)
 - [CLI Interface](#cli-interface)
 - [Full Documentation](#full-documentation)
 - [Releases](#releases)
@@ -33,9 +34,20 @@ Validus is now in the public domain because it's a waste to leave it sitting in 
 
 All questions, comments, and criticisms are welcome–especially if you find a bug, typo, or flaw (or you use it in a cool project–I'd love to have a list here of projects utilizing it).
 
-## <a id="building-from-source" /> Building from Source
+## <a id="building-from-source" /> Building from source
 
 CMake: there's a presets file, and Ninja is set as the default build tool. If you have VS Code, you just need the CMake tools extension and you can build and run with a few keystrokes. Without VS Code (or experience with CMake), I would recommend looking at [`configure.sh`](https://github.com/aremmell/validus/blob/master/configure.sh) which I wrote so that CMake installations succeeed even with ancient CMake vesions that don't support presets. In fact, you can most likely compile everything by executing `./configue.sh build`.
+
+### <a id="build-products" /> Build products
+
+Upon a successful build, the following are created:
+
+- `build/validus`: CLI application
+- `build/libvalidus.a`: Static library[^1]
+- `build/libvalidus.so`: Shared library[^1]
+
+[^1]: The exact filenames and extensions are platform-dependent. For example, on Windows, you will get
+`validus.exe`, `validus_static.lib` and `validus_shared.dll`.
 
 ## <a id="cli-interface" /> CLI interface
 
