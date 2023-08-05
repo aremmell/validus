@@ -7,7 +7,7 @@ set(PROJECT_NAME validus)
 set(EXECUTABLE_NAME validus)
 set(STATIC_LIBRARY_NAME validus_static)
 set(SHARED_LIBRARY_NAME validus_shared)
-set(PROJECT_VERSION_TYPE "")
+set(PROJECT_VERSION_TYPE "-dev")
 
 # policy settings, so CMake doesn't whine.
 cmake_policy(SET CMP0048 NEW) # project VERSION
@@ -25,7 +25,7 @@ set(CMAKE_C_FLAGS_RELEASE "${C_FLAGS_BASE} -O3 -D_FORTIFY_SOURCE=2 -DNDEBUG")
 # define the project
 project(
     ${PROJECT_NAME}
-    VERSION 1.0.2
+    VERSION 1.0.3
     LANGUAGES C
     DESCRIPTION "Validus: 192-bit OWHF"
 )
