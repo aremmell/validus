@@ -7,6 +7,7 @@ set(PROJECT_NAME validus)
 set(EXECUTABLE_NAME validus)
 set(STATIC_LIBRARY_NAME validus_static)
 set(SHARED_LIBRARY_NAME validus_shared)
+set(PROJECT_VERSION_TYPE "")
 
 # policy settings, so CMake doesn't whine.
 cmake_policy(SET CMP0048 NEW) # project VERSION
