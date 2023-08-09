@@ -10,6 +10,7 @@ set(SHARED_LIBRARY_NAME validus_shared)
 set(PROJECT_VERSION_TYPE "-dev")
 
 # policy settings, so CMake doesn't whine.
+cmake_policy(SET CMP0025 NEW) # AppleClang
 cmake_policy(SET CMP0048 NEW) # project VERSION
 cmake_policy(SET CMP0065 NEW) # ENABLE_EXPORTS
 cmake_policy(SET CMP0126 NEW) # cache
