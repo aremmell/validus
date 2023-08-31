@@ -9,19 +9,43 @@ set(STATIC_LIBRARY_NAME validus_static)
 set(SHARED_LIBRARY_NAME validus_shared)
 set(PROJECT_VERSION_TYPE "-dev")
 
+# create compile commands for static analysis
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+
+# select the C/C++ standards we can use based on the CMake version
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.21")
+    set(CMAKE_C_STANDARD 17)
+else()
+    set(CMAKE_C_STANDARD 11)
+endif()
+
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12")
+    set(CMAKE_CXX_STANDARD 20)
+else()
+    set(CMAKE_CXX_STANDARD 17)
+endif()
+
+set(CMAKE_C_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
 # policy settings, so CMake doesn't whine.
 cmake_policy(SET CMP0025 NEW) # AppleClang
 cmake_policy(SET CMP0048 NEW) # project VERSION
 cmake_policy(SET CMP0065 NEW) # ENABLE_EXPORTS
-cmake_policy(SET CMP0126 NEW) # cache
 cmake_policy(SET CMP0056 NEW) # CMAKE_EXE_LINKER_FLAGS
 cmake_policy(SET CMP0066 NEW) # CMAKE_<LANG>_FLAGS_<BUILDTYPE>
-cmake_policy(SET CMP0102 NEW) # mark_as_advanced
 
-# toolchain-related
-set(C_FLAGS_BASE  "-Wall -Wextra -Wpedantic")
-set(CMAKE_C_FLAGS_DEBUG "${C_FLAGS_BASE} -g3 -O0 -DDEBUG")
-set(CMAKE_C_FLAGS_RELEASE "${C_FLAGS_BASE} -O3 -D_FORTIFY_SOURCE=2 -DNDEBUG")
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.13")
+    cmake_policy(SET CMP0077 NEW) # option
+endif()
+
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.17")
+    cmake_policy(SET CMP0102 NEW) # mark_as_advanced
+endif()
+
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.21")
+    cmake_policy(SET CMP0126 NEW) # cache
+endif()
 
 # define the project
 project(
@@ -30,6 +54,39 @@ project(
     LANGUAGES C
     DESCRIPTION "Validus: 192-bit OWHF"
 )
+
+# toolchain-related
+add_compile_definitions(
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
+)
+
+if (MSVC)
+    add_compile_options(
+        /W4 /MP /GS
+        $<$<CONFIG:Debug>:/Od>
+        $<$<CONFIG:Debug>:/Zi>
+        $<$<CONFIG:Release>:/Ox>
+    )
+else()
+    # -Wformat-nonliteral is also an option
+    add_compile_options(
+        -Wall -Wextra -Wpedantic -Werror -Wdouble-promotion -Wconversion -Wno-sign-conversion -Wno-string-conversion -Wshift-overflow
+        $<$<CONFIG:Debug>:-O0>
+        $<$<CONFIG:Debug>:-g3>
+        $<$<CONFIG:Release>:-O3>
+    )
+
+    if (CMAKE_COMPILER_IS_GNUCC)
+        add_compile_options(
+            -Wformat-truncation
+        )
+    endif()
+
+    add_compile_definitions(
+        $<$<CONFIG:Release>:_FORTIFY_SOURCE=2>
+    )
+endif()
 
 # get the git commit hash for use in the version header
 execute_process(
@@ -88,19 +145,19 @@ target_include_directories(
 target_compile_features(
     ${EXECUTABLE_NAME}
     PUBLIC
-    c_std_17
+    ${C_STANDARD}
 )
 
 target_compile_features(
     ${STATIC_LIBRARY_NAME}
     PUBLIC
-    c_std_17
+    ${C_STANDARD}
 )
 
 target_compile_features(
     ${SHARED_LIBRARY_NAME}
     PUBLIC
-    c_std_17
+    ${C_STANDARD}
 )
 
 install(
