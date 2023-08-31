@@ -58,16 +58,15 @@ bool validus_hash_file(validus_state* state, const char* file) {
 
     FILE *f = fopen(file, "rb");
     if (!f) {
-        fprintf(stderr, "failed to open file '%s': %s\n", file, strerror(errno));
+        fprintf(stderr, "failed to open file '%s': %d\n", file, errno);
         return false;
     }
 
-    validus_octet *buf  = (validus_octet*)calloc(sizeof(validus_octet),
-        VALIDUS_FILE_BLOCKSIZE);
+    validus_octet *buf = calloc(sizeof(validus_octet), VALIDUS_FILE_BLOCKSIZE);
 
     if (!buf) {
-        fprintf(stderr, "failed to allocate %zu octets of heap memory: %s\n",
-            sizeof(validus_octet) * VALIDUS_FILE_BLOCKSIZE, strerror(errno));
+        fprintf(stderr, "failed to allocate %zu octets of heap memory: %d\n",
+            sizeof(validus_octet) * VALIDUS_FILE_BLOCKSIZE, errno);
         fclose(f);
         f = NULL;
         return false;
@@ -85,8 +84,7 @@ bool validus_hash_file(validus_state* state, const char* file) {
     }
 
     if (0 != ferror(f)) {
-        fprintf(stderr, "failed to read from file '%s': %s\n",
-            file, strerror(errno));
+        fprintf(stderr, "failed to read from file '%s': %d\n", file, errno);
     } else {
         validus_finalize(state);
         retval = true;
@@ -119,7 +117,7 @@ void validus_timer_start(validus_timer* timer)
 #if !defined(__WIN__)
     int ret = clock_gettime(CLOCK_REALTIME, &timer->ts);
     if (0 != ret) {
-        fprintf(stderr, "clock_gettime() failed: %s\n", strerror(errno));
+        fprintf(stderr, "clock_gettime() failed: %d\n", errno);
         timer->ts.tv_nsec = 0;
         timer->ts.tv_nsec = 0;
     }
@@ -135,7 +133,7 @@ float validus_timer_elapsed(const validus_timer* timer)
 #if !defined(__WIN__)
     int ret = clock_gettime(CLOCK_REALTIME, &now.ts);
     if (0 != ret) {
-        fprintf(stderr, "clock_gettime() failed: %s\n", strerror(errno));
+        fprintf(stderr, "clock_gettime() failed: %d\n", errno);
         return 0.0f;
     }
 
@@ -159,12 +157,11 @@ float validus_timer_elapsed(const validus_timer* timer)
 const char* validus_get_local_time(void)
 {
     static char buf[256] = {0};
+    memset(buf, 0, sizeof(buf));
 
     time_t now = time(NULL);
     struct tm lt = {0};
     (void)localtime_r(&now, &lt);
-
-    memset(buf, 0, sizeof(buf));
 
     if (0 != strftime(buf, sizeof(buf), "%T", &lt))
         return &buf[0];
