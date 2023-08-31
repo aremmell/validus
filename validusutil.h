@@ -130,11 +130,11 @@ bool validus_state_to_string(const validus_state *state, char *out, size_t len);
 
 /** A platform-dependent timer used for performance measurement. */
 typedef struct {
-#if defined(__WIN__)
+# if defined(__WIN__)
     FILETIME ft;        /**< The timer type on Windows. */
-#else
+# else
     struct timespec ts; /**< The timer type on *nix */
-#endif
+# endif
 } validus_timer;
 
 /**
