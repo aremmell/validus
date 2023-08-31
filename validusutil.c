@@ -126,7 +126,7 @@ void validus_timer_start(validus_timer* timer)
 #endif
 }
 
-float validus_timer_elapsed(const validus_timer* timer)
+double validus_timer_elapsed(const validus_timer* timer)
 {
     validus_timer now;
 
@@ -137,8 +137,8 @@ float validus_timer_elapsed(const validus_timer* timer)
         return 0.0f;
     }
 
-    return (float)((now.ts.tv_sec * 1e3) + (now.ts.tv_nsec / 1e6) -
-        (timer->ts.tv_sec * 1e3) + (timer->ts.tv_nsec / 1e6));
+    return (((double)now.ts.tv_sec * 1e3) + ((double)now.ts.tv_nsec / 1e6) -
+        ((double)timer->ts.tv_sec * 1e3) + ((double)timer->ts.tv_nsec / 1e6));
 #else /* __WIN__ */
     GetSystemTimePreciseAsFileTime(&now.ft);
 

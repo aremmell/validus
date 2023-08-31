@@ -145,14 +145,14 @@ int validus_cli_perf_test(void)
 
     validus_finalize(&state);
 
-    float elapsed_msec = validus_timer_elapsed(&timer);
+    double elapsed_msec = validus_timer_elapsed(&timer);
     double bps = (double)(VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE)
-        / ((double)elapsed_msec / 1e3);
+        / (elapsed_msec / 1e3);
     double mbs = bps / 1024.0 / 1024.0;
 
     printf(" done at %s:\n\telapsed: %.03f sec\n\tthroughput: %.2f MiB/sec\n\t"
            "fingerprint: " VALIDUS_FP_FMT_SPEC "\n", validus_get_local_time(),
-           ((double)elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3,
+           (elapsed_msec / 1e3), mbs, state.f0, state.f1, state.f2, state.f3,
            state.f4, state.f5);
 
     return EXIT_SUCCESS;

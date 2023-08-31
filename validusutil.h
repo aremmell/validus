@@ -151,10 +151,10 @@ void validus_timer_start(validus_timer* timer);
  *
  * @param timer Pointer to the validus_timer which should be examined
  *              for its elapsed time.
- * @returns float The number of milliseconds that have elapsed since
- *                ::validus_timer_start was called for `timer`.
+ * @returns double The number of milliseconds that have elapsed since
+ *                 ::validus_timer_start was called for `timer`.
  */
-float validus_timer_elapsed(const validus_timer* timer);
+double validus_timer_elapsed(const validus_timer* timer);
 
 /** Returns the local time, formatted as a string. */
 const char* validus_get_local_time(void);
