@@ -128,7 +128,7 @@ void validus_timer_start(validus_timer* timer)
 #endif
 }
 
-float validus_timer_elapsed(validus_timer* const timer)
+float validus_timer_elapsed(const validus_timer* timer)
 {
     validus_timer now;
 

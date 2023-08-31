@@ -130,7 +130,7 @@ int validus_cli_perf_test(void)
         validus_get_local_time(),
         VALIDUS_CLI_PERF_BLKS,
         VALIDUS_CLI_PERF_BLKSIZE,
-        ((VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE) / 3072ULL)
+        ((VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE) / 1024ULL / 1024ULL / 1024ULL)
     );
     fflush(stdout);
 
@@ -158,7 +158,7 @@ int validus_cli_perf_test(void)
     return EXIT_SUCCESS;
 }
 
-void print_test_result(bool result, validus_state* const state, const char* input) {
+void print_test_result(bool result, const validus_state* state, const char* input) {
     const int color = result ? 32 : 31;
     static const size_t longest_input = 12;
 
