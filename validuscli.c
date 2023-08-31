@@ -66,11 +66,11 @@ _print_usage:
 
 int validus_cli_print_usage(void)
 {
-    fprintf(stderr, ANSI_ESC "1m" VALIDUS_CLI_NAME " usage:" ANSI_ESC "0m\n");
-    fprintf(stderr, "\t" VALIDUS_CLI_STR " " ANSI_ESC "4mstring" ANSI_ESC
-        "0m Hash string and output fingerprint\n");
-    fprintf(stderr, "\t" VALIDUS_CLI_FILE " " ANSI_ESC "4mfile" ANSI_ESC
-        "0m   Hash file and output fingerprint\n");
+    fprintf(stderr, ANSI_BOLD VALIDUS_CLI_NAME " usage:" ANSI_RESET "\n");
+    fprintf(stderr, "\t" VALIDUS_CLI_STR " " ANSI_ULINE "string" ANSI_RESET
+        " Hash string and output fingerprint\n");
+    fprintf(stderr, "\t" VALIDUS_CLI_FILE " " ANSI_ULINE "file" ANSI_RESET
+        "   Hash file and output fingerprint\n");
     fprintf(stderr, "\t" VALIDUS_CLI_PERF "        Performance evaluation test\n");
     fprintf(stderr, "\t" VALIDUS_CLI_VS "        Verify that Validus is functioning correctly\n");
     fprintf(stderr, "\t" VALIDUS_CLI_VER "        Display version information\n");
@@ -158,7 +158,7 @@ int validus_cli_perf_test(void)
     return EXIT_SUCCESS;
 }
 
-void print_test_result(bool result, validus_state* state, const char* input) {
+void print_test_result(bool result, validus_state* const state, const char* input) {
     const int color = result ? 32 : 31;
     static const size_t longest_input = 12;
 
@@ -168,8 +168,8 @@ void print_test_result(bool result, validus_state* state, const char* input) {
         for (size_t n = input_len, off = 0; n < longest_input; n++, off++)
             padding[off] = ' ';
 
-        printf(ANSI_ESC "97m" VALIDUS_CLI_NAME " ['%s']%s = "
-            ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_ESC "0m" "\n", input, padding, color,
+        printf(ANSI_WHITE VALIDUS_CLI_NAME " ['%s']%s = "
+            ANSI_ESC "%dm" VALIDUS_FP_FMT_SPEC ANSI_RESET "\n", input, padding, color,
             state->f0, state->f1, state->f2, state->f3, state->f4, state->f5);
 
         free(padding);
@@ -178,26 +178,28 @@ void print_test_result(bool result, validus_state* state, const char* input) {
 
 int validus_cli_verify_sanity(void)
 {
-    static const struct test_value {
-        const char* str;
+    typedef struct {
+        const char* const str;
         validus_state kv;
-    } test_inputs[VALIDUS_CLI_SANITY_INPUTS] = {
+    } test_value;
+
+    static const test_value test_inputs[VALIDUS_CLI_SANITY_INPUTS] = {
         {"",
-            {{0}, 0xd3f0ad33, 0x79790917, 0x69135e44, 0xeb28aeda, 0x40e5423d, 0xd2e956e7}},
+            {{0}, 0xd3f0ad33U, 0x79790917U, 0x69135e44U, 0xeb28aedaU, 0x40e5423dU, 0xd2e956e7U}},
         {"abc",
-            {{0}, 0xf7ffabe5, 0x4ddb09a9, 0x3ebde51b, 0x90d1796a, 0x63ea3cc1, 0xa5ed093f}},
+            {{0}, 0xf7ffabe5U, 0x4ddb09a9U, 0x3ebde51bU, 0x90d1796aU, 0x63ea3cc1U, 0xa5ed093fU}},
         {"ABC",
-            {{0}, 0x9c273091, 0x9216af67, 0xc3d9a325, 0x4401ade8, 0x5920b7c1, 0xd707c65d}},
+            {{0}, 0x9c273091U, 0x9216af67U, 0xc3d9a325U, 0x4401ade8U, 0x5920b7c1U, 0xd707c65dU}},
         {"validus",
-            {{0}, 0xa16bbad7, 0x293dac29, 0x04cc1807, 0x6636125c, 0x2c68c29c, 0xcffa779d}},
+            {{0}, 0xa16bbad7U, 0x293dac29U, 0x04cc1807U, 0x6636125cU, 0x2c68c29cU, 0xcffa779dU}},
         {"1111111",
-            {{0}, 0x4f7879df, 0xe986f48e, 0x047190fe, 0x0961783a, 0x177b6dc1, 0x9d5f30d1}},
+            {{0}, 0x4f7879dfU, 0xe986f48eU, 0x047190feU, 0x0961783aU, 0x177b6dc1U, 0x9d5f30d1U}},
         {"1111112",
-            {{0}, 0x5f26b88d, 0xd4c24f7d, 0xe828d3ed, 0x18dc0a05, 0x45f26eb0, 0xc0b09061}},
+            {{0}, 0x5f26b88dU, 0xd4c24f7dU, 0xe828d3edU, 0x18dc0a05U, 0x45f26eb0U, 0xc0b09061U}},
         {"hello, world",
-            {{0}, 0xa54b0bad, 0xf8061b9b, 0x6f14c542, 0x0d2bd823, 0x9fbb7f67, 0x50b67af7}},
+            {{0}, 0xa54b0badU, 0xf8061b9bU, 0x6f14c542U, 0x0d2bd823U, 0x9fbb7f67U, 0x50b67af7U}},
         {"dlrow ,olleh",
-            {{0}, 0x3a39f172, 0xc900b9d8, 0x6efe31dd, 0xc065bdf9, 0xe02c4837, 0x50f9af86}}
+            {{0}, 0x3a39f172U, 0xc900b9d8U, 0x6efe31ddU, 0xc065bdf9U, 0xe02c4837U, 0x50f9af86U}}
     };
 
     bool all_pass = true;
@@ -225,6 +227,6 @@ void _validus_cli_print_error(const char* format, ...)
     (void)vsnprintf(buf, VALIDUS_CLI_MAX_ERROR, format, args);
     va_end(args);
 
-    fprintf(stderr, "%s%s%s%s", ANSI_ESC "31m", VALIDUS_CLI_NAME ": ", buf,
-        ANSI_ESC "0m\n");
+    fprintf(stderr, "%s%s%s%s", ANSI_RED, VALIDUS_CLI_NAME ": ", buf,
+        ANSI_RESET "\n");
 }

@@ -48,7 +48,12 @@
 
 # define VALIDUS_CLI_NAME "validus"
 
-# define ANSI_ESC "\x1b["
+# define ANSI_ESC   "\x1b["
+# define ANSI_WHITE ANSI_ESC "97m"
+# define ANSI_RED   ANSI_ESC "31m"
+# define ANSI_ULINE ANSI_ESC "4m"
+# define ANSI_BOLD  ANSI_ESC "1m"
+# define ANSI_RESET ANSI_ESC "0m"
 
 # define VALIDUS_CLI_PERF_BLKS    (1024ULL * 1024ULL)
 # define VALIDUS_CLI_PERF_BLKSIZE (1024ULL * 10ULL)
