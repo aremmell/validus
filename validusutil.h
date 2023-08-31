@@ -41,7 +41,7 @@
 #  define WIN32_LEAN_AND_MEAN
 #  define WINVER       0x0A00
 #  define _WIN32_WINNT 0x0A00
-#  include <windows.h>
+#  include <Windows.h>
 #  define __WIN__
 # endif
 
@@ -153,7 +153,7 @@ void validus_timer_start(validus_timer* timer);
  * @returns float The number of milliseconds that have elapsed since
  *                ::validus_timer_start was called for `timer`.
  */
-float validus_timer_elapsed(validus_timer* timer);
+float validus_timer_elapsed(validus_timer* const timer);
 
 /** Returns the local time, formatted as a string. */
 const char* validus_get_local_time(void);

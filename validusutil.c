@@ -128,7 +128,7 @@ void validus_timer_start(validus_timer* timer)
 #endif
 }
 
-float validus_timer_elapsed(validus_timer* timer)
+float validus_timer_elapsed(validus_timer* const timer)
 {
     validus_timer now;
 
@@ -161,11 +161,12 @@ const char* validus_get_local_time(void)
     static char buf[256] = {0};
 
     time_t now = time(NULL);
-    struct tm* lt = localtime(&now);
+    struct tm lt = {0};
+    (void)localtime_r(&now, &lt);
 
     memset(buf, 0, sizeof(buf));
 
-    if (lt && 0 != strftime(buf, sizeof(buf), "%T", lt))
+    if (0 != strftime(buf, sizeof(buf), "%T", &lt))
         return &buf[0];
 
     return "";
