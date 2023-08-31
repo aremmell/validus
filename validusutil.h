@@ -58,10 +58,10 @@
 ///////////////////////////////// macros ///////////////////////////////////////
 
 /** The size, in octets used to read blocks of data from a file. */
-# define VALIDUS_FILE_BLOCKSIZE 8192ul
+# define VALIDUS_FILE_BLOCKSIZE 8192UL
 
 /** The maximum size, in octets of a string to hash. */
-# define VALIDUS_MAX_STRING 2048ul
+# define VALIDUS_MAX_STRING 2048UL
 
 /** Format specifier string for a Validus fingerprint. */
 # define VALIDUS_FP_FMT_SPEC \

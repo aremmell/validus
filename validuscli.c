@@ -130,7 +130,7 @@ int validus_cli_perf_test(void)
         validus_get_local_time(),
         VALIDUS_CLI_PERF_BLKS,
         VALIDUS_CLI_PERF_BLKSIZE,
-        ((VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE) / 3072ull)
+        ((VALIDUS_CLI_PERF_BLKS * VALIDUS_CLI_PERF_BLKSIZE) / 3072ULL)
     );
     fflush(stdout);
 
