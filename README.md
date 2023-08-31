@@ -1,6 +1,11 @@
 # Validus
 
-A high-throughput, yet beefy 192-bit OWHF written in (*reasonably*) portable C11/17.
+![Codacy grade](https://img.shields.io/codacy/grade/cd00cab5af0347d887bb202a85a3dc9c?logo=codacy) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=aremmell_validus&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=aremmell_validus) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aremmell_validus&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=aremmell_validus)
+
+Validus: a high-throughput, yet beefy 192-bit OWHF written in (*reasonably*) portable C11/17.
+
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2004-current Ryan M. Lederman <lederman@gmail.com> -->
 
 <!-- toc -->
 
@@ -36,7 +41,7 @@ All questions, comments, and criticisms are welcome–especially if you find a b
 
 ## <a id="building-from-source" /> Building from source
 
-CMake: there's a presets file, and Ninja is set as the default build tool. If you have VS Code, you just need the CMake tools extension and you can build and run with a few keystrokes. Without VS Code (or experience with CMake), I would recommend looking at [`configure.sh`](https://github.com/aremmell/validus/blob/master/configure.sh) which I wrote so that CMake installations succeeed even with ancient CMake vesions that don't support presets. In fact, you can most likely compile everything by executing `./configue.sh build`.
+CMake: there's a presets file, and Ninja is set as the default build tool. If you have VS Code, you just need the CMake tools extension and you can build and run with a few keystrokes. Without VS Code (or experience with CMake), as long as you have a reasonably recent version of CMake, the following should do the trick: `cmake --preset release && cmake --build build`.
 
 ### <a id="build-products" /> Build products
 
