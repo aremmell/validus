@@ -84,9 +84,7 @@
 #  error "failed to determine endian-ness of this system."
 # endif
 
-# if BYTE_ORDER == LITTLE_ENDIAN
-#  undef VALIDUS_BIG_ENDIAN
-# elif BYTE_ORDER == BIG_ENDIAN
+# if BYTE_ORDER == BIG_ENDIAN
 #  define VALIDUS_BIG_ENDIAN
 # endif
 
