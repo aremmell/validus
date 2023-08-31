@@ -245,32 +245,36 @@ void _validus_process(validus_state* state, const validus_word* blk32);
 # define M3(a, b, c, d, e) ((((a) & (b)) ^ (c) & ((d) ^ (e)) ^ (e)))
 
 /** Compression function 0. */
-# define VC_0(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-    register validus_word t;                        \
-    t = a + M0(b, c, d, e, f) + ROL(blk + hcv, r1); \
-    a = ROR(t + blk, r2);                           \
-}
+# define VC_0(a, b, c, d, e, f, r1, r2, blk, hcv)       \
+    do {                                                \
+        register validus_word t;                        \
+        t = a + M0(b, c, d, e, f) + ROL(blk + hcv, r1); \
+        a = ROR(t + blk, r2);                           \
+    } while (false)
 
 /** Compression function 1. */
-# define VC_1(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-    register validus_word t;                        \
-    t = a + M1(b, c, d, e, f) + ROL(blk + hcv, r1); \
-    a = ROR(t + blk, r2);                           \
-}
+# define VC_1(a, b, c, d, e, f, r1, r2, blk, hcv)       \
+    do {                                                \
+        register validus_word t;                        \
+        t = a + M1(b, c, d, e, f) + ROL(blk + hcv, r1); \
+        a = ROR(t + blk, r2);                           \
+    } while (false)
 
 /** Compression function 2. */
-# define VC_2(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-    register validus_word t;                        \
-    t = a + M2(b, c, d, e, f) + ROL(blk + hcv, r1); \
-    a = ROR(t + blk, r2);                           \
-}
+# define VC_2(a, b, c, d, e, f, r1, r2, blk, hcv)       \
+    do {                                                \
+        register validus_word t;                        \
+        t = a + M2(b, c, d, e, f) + ROL(blk + hcv, r1); \
+        a = ROR(t + blk, r2);                           \
+    } while (false)
 
 /** Compression function 3. */
-# define VC_3(a, b, c, d, e, f, r1, r2, blk, hcv) { \
-    register validus_word t;                        \
-    t = a + M3(b, c, d, e, f) + ROL(blk + hcv, r1); \
-    a = ROR(t + blk, r2);                           \
-}
+# define VC_3(a, b, c, d, e, f, r1, r2, blk, hcv)       \
+    do {                                                \
+        register validus_word t;                        \
+        t = a + M3(b, c, d, e, f) + ROL(blk + hcv, r1); \
+        a = ROR(t + blk, r2);                           \
+    } while (false)
 
 /* Initial state values. */
 # define VALIDUS_INIT_0  0x81010881  /**< 10000001000000010000100010000001 */
