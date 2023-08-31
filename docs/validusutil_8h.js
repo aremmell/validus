@@ -9,6 +9,6 @@ var validusutil_8h =
     [ "validus_hash_file", "group__util.html#ga524b08fb659b46d52e0b888db9cc80ba", null ],
     [ "validus_state_to_string", "group__util.html#gab60f5b960d5c5446381850c50e9b60b0", null ],
     [ "validus_timer_start", "validusutil_8h.html#ac264f5ca2429c65bc5a62c3267c3a3cb", null ],
-    [ "validus_timer_elapsed", "validusutil_8h.html#af9d193e3b6038345a0c5bc21595a238c", null ],
+    [ "validus_timer_elapsed", "validusutil_8h.html#a0b9d1f14fd021b3ae9743304e5f0740e", null ],
     [ "validus_get_local_time", "validusutil_8h.html#a23f39719ca12210c086aada7f361194b", null ]
 ];

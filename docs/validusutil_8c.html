@@ -138,9 +138,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac264f5ca2429c65bc5a62c3267c3a3cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="validusutil_8c.html#ac264f5ca2429c65bc5a62c3267c3a3cb">validus_timer_start</a> (<a class="el" href="structvalidus__timer.html">validus_timer</a> *timer)</td></tr>
 <tr class="memdesc:ac264f5ca2429c65bc5a62c3267c3a3cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts a <a class="el" href="structvalidus__timer.html" title="A platform-dependent timer used for performance measurement.">validus_timer</a>.  <br /></td></tr>
 <tr class="separator:ac264f5ca2429c65bc5a62c3267c3a3cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9d193e3b6038345a0c5bc21595a238c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="validusutil_8c.html#af9d193e3b6038345a0c5bc21595a238c">validus_timer_elapsed</a> (<a class="el" href="structvalidus__timer.html">validus_timer</a> *timer)</td></tr>
-<tr class="memdesc:af9d193e3b6038345a0c5bc21595a238c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the milliseconds that have elapsed since <code>timer</code> was started.  <br /></td></tr>
-<tr class="separator:af9d193e3b6038345a0c5bc21595a238c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b9d1f14fd021b3ae9743304e5f0740e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="validusutil_8c.html#a0b9d1f14fd021b3ae9743304e5f0740e">validus_timer_elapsed</a> (const <a class="el" href="structvalidus__timer.html">validus_timer</a> *timer)</td></tr>
+<tr class="memdesc:a0b9d1f14fd021b3ae9743304e5f0740e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the milliseconds that have elapsed since <code>timer</code> was started.  <br /></td></tr>
+<tr class="separator:a0b9d1f14fd021b3ae9743304e5f0740e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23f39719ca12210c086aada7f361194b"><td class="memItemLeft" align="right" valign="top"><a id="a23f39719ca12210c086aada7f361194b" name="a23f39719ca12210c086aada7f361194b"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>validus_get_local_time</b> (void)</td></tr>
 <tr class="memdesc:a23f39719ca12210c086aada7f361194b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the local time, formatted as a string. <br /></td></tr>
@@ -151,7 +151,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>validus_get_l
 <p>Implements the functions utilized by the Validus CLI application.</p>
 <dl class="section author"><dt>Author</dt><dd>Ryan M. Lederman &lt;<a href="#" onclick="location.href='mai'+'lto:'+'led'+'er'+'man'+'@g'+'mai'+'l.'+'com'; return false;">leder<span class="obfuscator">.nosp@m.</span>man@<span class="obfuscator">.nosp@m.</span>gmail<span class="obfuscator">.nosp@m.</span>.com</a>&gt; </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2004-2023 </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.0.1 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0.3 </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>The MIT License (MIT)</dd></dl>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
@@ -183,16 +183,16 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>validus_get_l
 
 </div>
 </div>
-<a id="af9d193e3b6038345a0c5bc21595a238c" name="af9d193e3b6038345a0c5bc21595a238c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9d193e3b6038345a0c5bc21595a238c">&#9670;&#160;</a></span>validus_timer_elapsed()</h2>
+<a id="a0b9d1f14fd021b3ae9743304e5f0740e" name="a0b9d1f14fd021b3ae9743304e5f0740e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b9d1f14fd021b3ae9743304e5f0740e">&#9670;&#160;</a></span>validus_timer_elapsed()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float validus_timer_elapsed </td>
+          <td class="memname">double validus_timer_elapsed </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structvalidus__timer.html">validus_timer</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="structvalidus__timer.html">validus_timer</a> *&#160;</td>
           <td class="paramname"><em>timer</em></td><td>)</td>
           <td></td>
         </tr>
@@ -206,7 +206,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>validus_get_l
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>float The number of milliseconds that have elapsed since <a class="el" href="validusutil_8h.html#ac264f5ca2429c65bc5a62c3267c3a3cb" title="Starts a validus_timer.">validus_timer_start</a> was called for <code>timer</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>double The number of milliseconds that have elapsed since <a class="el" href="validusutil_8h.html#ac264f5ca2429c65bc5a62c3267c3a3cb" title="Starts a validus_timer.">validus_timer_start</a> was called for <code>timer</code>. </dd></dl>
 
 </div>
 </div>

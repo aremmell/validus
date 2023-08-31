@@ -115,13 +115,18 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Validus </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a> A high-throughput, yet beefy 192-bit OWHF written in (<em>reasonably</em>) portable C11/17.</p>
+<div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a> <img src="https://img.shields.io/codacy/grade/cd00cab5af0347d887bb202a85a3dc9c?logo=codacy" alt="Codacy grade" class="inline"/> <a href="https://sonarcloud.io/summary/new_code?id=aremmell_validus"><img src="https://sonarcloud.io/api/project_badges/measure?project=aremmell_validus&amp;metric=reliability_rating" alt="Reliability Rating" class="inline"/></a> <a href="https://sonarcloud.io/summary/new_code?id=aremmell_validus"><img src="https://sonarcloud.io/api/project_badges/measure?project=aremmell_validus&amp;metric=sqale_rating" alt="Maintainability Rating" class="inline"/></a></p>
+<p>Validus: a high-throughput, yet beefy 192-bit OWHF written in (<em>reasonably</em>) portable C11/17.</p>
 <ul>
 <li><a class="el" href="index.html#intro">Intro</a></li>
 <li><a class="el" href="index.html#tldr">TL;DR</a></li>
 <li><a class="el" href="index.html#disclaimer">Disclaimer</a></li>
-<li><a class="el" href="index.html#building-from-source">Building from source</a></li>
+<li><a class="el" href="index.html#building-from-source">Building from source</a><ul>
+<li><a class="el" href="index.html#build-products">Build products</a></li>
+</ul>
+</li>
 <li><a class="el" href="index.html#cli-interface">CLI Interface</a></li>
+<li><a class="el" href="index.html#full-documentation">Full Documentation</a></li>
 <li><a class="el" href="index.html#releases">Releases</a></li>
 <li><a class="el" href="index.html#latin">Latin</a></li>
 </ul>
@@ -134,8 +139,16 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>I am <em>not</em> making any claims about cryptographic security in Validus (I am not a cryptologist), nor do I guarantee it not vulnurable to collisions, but it does pass the <a href="https://arishs.medium.com/analyze-your-hash-functions-the-avalanche-metrics-calculation-767b7445ee6f">Avalanche Criterion</a> (<em>1 bit of input changes = 50% of output bits change</em>).</p>
 <p>Validus is now in the public domain because it's a waste to leave it sitting in a private repository. It's been cleaned up a bit, and there's a CLI interface to hash files and strings and such.</p>
 <p>All questions, comments, and criticisms are welcome–especially if you find a bug, typo, or flaw (or you use it in a cool project–I'd love to have a list here of projects utilizing it).</p>
-<h1><a class="anchor" id="building-from-source"></a> Building from Source</h1>
-<p>CMake: there's a presets file, and Ninja is set as the default build tool. If you have VS Code, you just need the CMake tools extension and you can build and run with a few keystrokes. Without VS Code (or experience with CMake), I would recommend looking at <a href="https://github.com/aremmell/validus/blob/master/configure.sh"><code>configure.sh</code></a> which I wrote so that CMake installations succeeed even with ancient CMake vesions that don't support presets. In fact, you can most likely compile everything by executing <code>./configue.sh build</code>.</p>
+<h1><a class="anchor" id="building-from-source"></a> Building from source</h1>
+<p>CMake: there's a presets file, and Ninja is set as the default build tool. If you have VS Code, you just need the CMake tools extension and you can build and run with a few keystrokes. Without VS Code (or experience with CMake), as long as you have a reasonably recent version of CMake, the following should do the trick: <code>cmake --preset release &amp;&amp; cmake --build build</code>.</p>
+<h2><a class="anchor" id="build-products"></a> Build products</h2>
+<p>Upon a successful build, the following are created[^1]:</p>
+<ul>
+<li><code>build/validus</code>: CLI application</li>
+<li><code>build/libvalidus.a</code>: Static library</li>
+<li><code>build/libvalidus.so</code>: Shared library</li>
+</ul>
+<p>[^1]: The exact filenames and extensions are platform-dependent. For example, on Windows, you will get <code>validus.exe</code>, <code>validus_static.lib</code> and <code>validus_shared.dll</code>.</p>
 <h1><a class="anchor" id="cli-interface"></a> CLI interface</h1>
 <p>Once CMake finishes building, the CLI app will be located at <code>build/validus</code>. The following is a breakdown of its basic usage:</p>
 <div class="fragment"><div class="line">validus usage:</div>
@@ -146,6 +159,8 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">        -v        Display version information</div>
 <div class="line">        -h        Show this message</div>
 </div><!-- fragment --><p>Most of these are self-explanatory. The <code>-t</code> option causes the algorithm to hash a known set of strings, with a predefined known correct output. If the output is green, Validus is working correctly; if it's red, something has gone wrong during compilation and it is probably a bug. Please <a href="https://github.com/aremmell/validus/issues/new">file an issue</a> if you encounter this situtation!</p>
+<h1><a class="anchor" id="full-documentation"></a> Full Documentation</h1>
+<p>Thanks to Doxygen, Validus has a <a href="https://validus.rml.dev">dedicated documentation site</a>.</p>
 <h1><a class="anchor" id="releases"></a> Releases</h1>
 <p>Some tweaks to the build configuration need to take place, but sooner rather than later, static/shared libraries and the CLI app will be packaged (at least for macOS, Windows and Linux on x86_64 &amp; aarch64). In the mean time, building with CMake will have to do.</p>
 <h1><a class="anchor" id="latin"></a> Latin</h1>

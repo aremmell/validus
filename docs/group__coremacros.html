@@ -145,19 +145,19 @@ Macros</h2></td></tr>
 <tr class="memdesc:gaf4ed151fcacf51e3325fcf1fd603afb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cyclically rotates word <code>a</code> by <code>b</code> bits to the right. <br /></td></tr>
 <tr class="separator:gaf4ed151fcacf51e3325fcf1fd603afb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga63830f4a7e8bfa1fc215618b9b686364"><td class="memItemLeft" align="right" valign="top"><a id="ga63830f4a7e8bfa1fc215618b9b686364" name="ga63830f4a7e8bfa1fc215618b9b686364"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>M0</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; (b)) ^ ((c) &amp; (d)  ^ (e))))</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>M0</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; (b)) ^ (((c) &amp; (d)) ^ (e))))</td></tr>
 <tr class="memdesc:ga63830f4a7e8bfa1fc215618b9b686364"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mixer function 0. <br /></td></tr>
 <tr class="separator:ga63830f4a7e8bfa1fc215618b9b686364"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga16c61fd6eee9d43221e79aef9e5a9083"><td class="memItemLeft" align="right" valign="top"><a id="ga16c61fd6eee9d43221e79aef9e5a9083" name="ga16c61fd6eee9d43221e79aef9e5a9083"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>M1</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; (b)) ^ ((b) ^ (c)  &amp; (d)  ^ (e))))</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>M1</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; (b)) ^ ((b) ^ ((c) &amp; (d)) ^ (e))))</td></tr>
 <tr class="memdesc:ga16c61fd6eee9d43221e79aef9e5a9083"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mixer function 1. <br /></td></tr>
 <tr class="separator:ga16c61fd6eee9d43221e79aef9e5a9083"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5c61574986f60f15c238660dc774395b"><td class="memItemLeft" align="right" valign="top"><a id="ga5c61574986f60f15c238660dc774395b" name="ga5c61574986f60f15c238660dc774395b"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>M2</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;(((a)  &amp; ((b) ^ (c)) ^ ~(d) &amp; (e)  ^ (c)))</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>M2</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; ((b) ^ (c))) ^ (~(d) &amp; (e)) ^ (c)))</td></tr>
 <tr class="memdesc:ga5c61574986f60f15c238660dc774395b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mixer function 2. <br /></td></tr>
 <tr class="separator:ga5c61574986f60f15c238660dc774395b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa67e4fc89e266c0ba0273451a79d7706"><td class="memItemLeft" align="right" valign="top"><a id="gaa67e4fc89e266c0ba0273451a79d7706" name="gaa67e4fc89e266c0ba0273451a79d7706"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>M3</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; (b)) ^ (c)  &amp; ((d) ^ (e)) ^ (e)))</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>M3</b>(a,  b,  c,  d,  e)&#160;&#160;&#160;((((a) &amp; (b)) ^ ((c) &amp; ((d) ^ (e))) ^ (e)))</td></tr>
 <tr class="memdesc:gaa67e4fc89e266c0ba0273451a79d7706"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mixer function 3. <br /></td></tr>
 <tr class="separator:gaa67e4fc89e266c0ba0273451a79d7706"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9ba039458ec3e393c00a32d381177f69"><td class="memItemLeft" align="right" valign="top"><a id="ga9ba039458ec3e393c00a32d381177f69" name="ga9ba039458ec3e393c00a32d381177f69"></a>
@@ -177,27 +177,27 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga47f8f4d416fe627e5c2e9d5937413353"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compression function 3. <br /></td></tr>
 <tr class="separator:ga47f8f4d416fe627e5c2e9d5937413353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacbd1d58f85820dbb43be9522d97920fa"><td class="memItemLeft" align="right" valign="top"><a id="gacbd1d58f85820dbb43be9522d97920fa" name="gacbd1d58f85820dbb43be9522d97920fa"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_0</b>&#160;&#160;&#160;0x81010881</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_0</b>&#160;&#160;&#160;0x81010881U</td></tr>
 <tr class="memdesc:gacbd1d58f85820dbb43be9522d97920fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">10000001000000010000100010000001 <br /></td></tr>
 <tr class="separator:gacbd1d58f85820dbb43be9522d97920fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga534d5a28e0825ccfb8b29c882bcbbf10"><td class="memItemLeft" align="right" valign="top"><a id="ga534d5a28e0825ccfb8b29c882bcbbf10" name="ga534d5a28e0825ccfb8b29c882bcbbf10"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_1</b>&#160;&#160;&#160;0xA529298B</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_1</b>&#160;&#160;&#160;0xA529298BU</td></tr>
 <tr class="memdesc:ga534d5a28e0825ccfb8b29c882bcbbf10"><td class="mdescLeft">&#160;</td><td class="mdescRight">10100101001010010010100110001011 <br /></td></tr>
 <tr class="separator:ga534d5a28e0825ccfb8b29c882bcbbf10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5d3477449d9abca43a4aede782f83c46"><td class="memItemLeft" align="right" valign="top"><a id="ga5d3477449d9abca43a4aede782f83c46" name="ga5d3477449d9abca43a4aede782f83c46"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_2</b>&#160;&#160;&#160;0x66AC654A</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_2</b>&#160;&#160;&#160;0x66AC654AU</td></tr>
 <tr class="memdesc:ga5d3477449d9abca43a4aede782f83c46"><td class="mdescLeft">&#160;</td><td class="mdescRight">01100110101011000110010101001010 <br /></td></tr>
 <tr class="separator:ga5d3477449d9abca43a4aede782f83c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabbdcb8faa32e07110fe02807688bb910"><td class="memItemLeft" align="right" valign="top"><a id="gabbdcb8faa32e07110fe02807688bb910" name="gabbdcb8faa32e07110fe02807688bb910"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_3</b>&#160;&#160;&#160;0x52865650</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_3</b>&#160;&#160;&#160;0x52865650U</td></tr>
 <tr class="memdesc:gabbdcb8faa32e07110fe02807688bb910"><td class="mdescLeft">&#160;</td><td class="mdescRight">01010010100001100101011001010000 <br /></td></tr>
 <tr class="separator:gabbdcb8faa32e07110fe02807688bb910"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0f761573d7d0cfcb3b03390510767bf1"><td class="memItemLeft" align="right" valign="top"><a id="ga0f761573d7d0cfcb3b03390510767bf1" name="ga0f761573d7d0cfcb3b03390510767bf1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_4</b>&#160;&#160;&#160;0x18529234</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_4</b>&#160;&#160;&#160;0x18529234U</td></tr>
 <tr class="memdesc:ga0f761573d7d0cfcb3b03390510767bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">00011000010100101001001000110100 <br /></td></tr>
 <tr class="separator:ga0f761573d7d0cfcb3b03390510767bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga799551e156b9367dae6041f1aa4d2817"><td class="memItemLeft" align="right" valign="top"><a id="ga799551e156b9367dae6041f1aa4d2817" name="ga799551e156b9367dae6041f1aa4d2817"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_5</b>&#160;&#160;&#160;0x08508024</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>VALIDUS_INIT_5</b>&#160;&#160;&#160;0x08508024U</td></tr>
 <tr class="memdesc:ga799551e156b9367dae6041f1aa4d2817"><td class="mdescLeft">&#160;</td><td class="mdescRight">00001000010100001000000000100100 <br /></td></tr>
 <tr class="separator:ga799551e156b9367dae6041f1aa4d2817"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
