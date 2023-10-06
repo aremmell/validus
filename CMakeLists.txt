@@ -7,7 +7,7 @@ set(PROJECT_NAME validus)
 set(EXECUTABLE_NAME validus)
 set(STATIC_LIBRARY_NAME validus_static)
 set(SHARED_LIBRARY_NAME validus_shared)
-set(PROJECT_VERSION_TYPE "-dev")
+set(PROJECT_VERSION_TYPE "")
 
 # create compile commands for static analysis
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
