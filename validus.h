@@ -88,7 +88,9 @@
 #  define VALIDUS_BIG_ENDIAN
 # endif
 
+# if !defined(_DEFAULT_SOURCE)
 # define _DEFAULT_SOURCE 1
+# endif
 
 # include <stdlib.h>
 # include <stdint.h>
