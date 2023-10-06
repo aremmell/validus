@@ -156,7 +156,11 @@ void validus_timer_start(validus_timer* timer);
  */
 double validus_timer_elapsed(const validus_timer* timer);
 
-/** Returns the local time, formatted as a string. */
+/**
+ * @brief Retrieves the local time.
+ *
+ * @returns const char* A formatted time stamp for the current local time.
+ */
 const char* validus_get_local_time(void);
 
 # ifdef __cplusplus
