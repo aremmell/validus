@@ -7,7 +7,7 @@ set(PROJECT_NAME validus)
 set(EXECUTABLE_NAME validus)
 set(STATIC_LIBRARY_NAME validus_static)
 set(SHARED_LIBRARY_NAME validus_shared)
-set(PROJECT_VERSION_TYPE "")
+set(PROJECT_VERSION_TYPE "-dev")
 
 # create compile commands for static analysis
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
@@ -50,7 +50,7 @@ endif()
 # define the project
 project(
     ${PROJECT_NAME}
-    VERSION 1.0.3
+    VERSION 1.0.4
     LANGUAGES C
     DESCRIPTION "Validus: 192-bit OWHF"
 )
