@@ -134,7 +134,7 @@ double validus_timer_elapsed(const validus_timer* timer)
     int ret = clock_gettime(CLOCK_REALTIME, &now.ts);
     if (0 != ret) {
         fprintf(stderr, "clock_gettime() failed: %d\n", errno);
-        return 0.0f;
+        return 0.0;
     }
 
     return (((double)now.ts.tv_sec * 1e3) + ((double)now.ts.tv_nsec / 1e6) -
