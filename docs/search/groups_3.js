@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['utility_0',['Utility',['../group__util.html',1,'']]]
+  ['macros_0',['Macros',['../group__coremacros.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['functions_20and_20types_0',['Functions and Types',['../group__corefuncs.html',1,'']]]
+  ['core_0',['Core',['../group__core.html',1,'']]]
 ];

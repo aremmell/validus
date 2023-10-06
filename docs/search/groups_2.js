@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['macros_0',['Macros',['../group__coremacros.html',1,'']]]
+  ['functions_20and_20types_0',['Functions and Types',['../group__corefuncs.html',1,'']]]
 ];

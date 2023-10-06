@@ -25,7 +25,6 @@
 var NAVTREE =
 [
   [ "Validus", "index.html", [
-    [ "Modules", "modules.html", "modules" ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [

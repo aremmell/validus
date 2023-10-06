@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['m0_0',['M0',['../group__coremacros.html#ga63830f4a7e8bfa1fc215618b9b686364',1,'validus.h']]],
-  ['m1_1',['M1',['../group__coremacros.html#ga16c61fd6eee9d43221e79aef9e5a9083',1,'validus.h']]],
-  ['m2_2',['M2',['../group__coremacros.html#ga5c61574986f60f15c238660dc774395b',1,'validus.h']]],
-  ['m3_3',['M3',['../group__coremacros.html#gaa67e4fc89e266c0ba0273451a79d7706',1,'validus.h']]],
-  ['macros_4',['Macros',['../group__coremacros.html',1,'']]]
+  ['f0_0',['f0',['../structvalidus__state.html#a437e739a45c833c4304ef8f5dd2d8ac5',1,'validus_state']]],
+  ['f1_1',['f1',['../structvalidus__state.html#a8f084e0c989ccb9f09d992b60be1cdda',1,'validus_state']]],
+  ['f2_2',['f2',['../structvalidus__state.html#afe6c3d4fad43d971c4d4fb12c184994d',1,'validus_state']]],
+  ['f3_3',['f3',['../structvalidus__state.html#aa5fabc87f250b20464fea94b0eb5d357',1,'validus_state']]],
+  ['f4_4',['f4',['../structvalidus__state.html#a2cd902c6f49f679619b34d44f74bc98b',1,'validus_state']]],
+  ['f5_5',['f5',['../structvalidus__state.html#a158789250216e157763b272c3397285c',1,'validus_state']]],
+  ['functions_20and_20types_6',['Functions and Types',['../group__corefuncs.html',1,'']]]
 ];
