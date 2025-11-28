@@ -89,7 +89,7 @@
 # endif
 
 # if !defined(_DEFAULT_SOURCE)
-# define _DEFAULT_SOURCE 1
+#  define _DEFAULT_SOURCE 1
 # endif
 
 # include <stdlib.h>
