@@ -48,12 +48,17 @@
 #  if !defined(BYTE_ORDER) && defined(__BYTE_ORDER)
 #   define BYTE_ORDER __BYTE_ORDER
 #  endif
+#  else
+#    if !defined(LITTLE_ENDIAN)
+#      define LITTLE_ENDIAN 1234
+#    endif
+#    if !defined(BIG_ENDIAN)
+#      define BIG_ENDIAN 4321
+#    endif
 # endif
 
 # if defined(__sun)
 #  include <sys/byteorder.h>
-#  define LITTLE_ENDIAN 1234
-#  define BIG_ENDIAN    4321
 #  if defined(_BIG_ENDIAN)
 #   define BYTE_ORDER BIG_ENDIAN
 #  elif defined(_LITTLE_ENDIAN)
@@ -64,8 +69,6 @@
 # endif
 
 # if defined(_AIX) && !defined(BYTE_ORDER)
-#  define LITTLE_ENDIAN 1234
-#  define BIG_ENDIAN    4321
 #  if defined(__BIG_ENDIAN__)
 #   define BYTE_ORDER BIG_ENDIAN
 #  elif defined(__LITTLE_ENDIAN__)
