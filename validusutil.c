@@ -173,7 +173,7 @@ const char* validus_get_local_time(void)
         fprintf(stderr, "localtime_%s() failed: %d\n", LOCALTIME_VARIANT, errno);
     }
 
-    if (0 == strftime(buf, sizeof(buf), "%T", &lt)) {
+    if (lt_ret && 0 == strftime(buf, sizeof(buf), "%T", &lt)) {
         buf[0] = '\0';
     }
 
