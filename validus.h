@@ -75,9 +75,7 @@
 #  endif
 # endif
 
-# if defined(_WIN32)
-#  define LITTLE_ENDIAN 1234
-#  define BIG_ENDIAN    4321
+# if defined(__WIN__)
 #  define BYTE_ORDER LITTLE_ENDIAN
 # endif
 

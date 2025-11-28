@@ -33,7 +33,7 @@
 # include <stdarg.h>
 # include <version.h>
 
-# if defined(_WIN32)
+# if defined(__WIN__)
 #  include <conio.h>
 # endif
 
