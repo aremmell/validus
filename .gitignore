@@ -1,5 +1,8 @@
 # Build artifacts
 build/
 
+# Claude code misc.
+.claude/
+
 # Annoying macOS files
 .DS_Store
