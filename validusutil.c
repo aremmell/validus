@@ -119,7 +119,6 @@ void validus_timer_start(validus_timer* timer)
     if (0 != ret) {
         fprintf(stderr, "clock_gettime() failed: %d\n", errno);
         timer->ts.tv_nsec = 0;
-        timer->ts.tv_nsec = 0;
     }
 #else /* __WIN__ */
     GetSystemTimePreciseAsFileTime(&timer->ft);
@@ -137,8 +136,8 @@ double validus_timer_elapsed(const validus_timer* timer)
         return 0.0;
     }
 
-    return (((double)now.ts.tv_sec * 1e3) + ((double)now.ts.tv_nsec / 1e6) -
-        ((double)timer->ts.tv_sec * 1e3) + ((double)timer->ts.tv_nsec / 1e6));
+    return ((((double)now.ts.tv_sec * 1e3) + ((double)now.ts.tv_nsec / 1e6)) -
+        (((double)timer->ts.tv_sec * 1e3) + ((double)timer->ts.tv_nsec / 1e6)));
 #else /* __WIN__ */
     GetSystemTimePreciseAsFileTime(&now.ft);
 
