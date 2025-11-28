@@ -1,13 +1,13 @@
 var indexSectionsWithContent =
 {
-  0: "_abcfmortuvw",
+  0: "_abcdfilmoprstuvw",
   1: "v",
   2: "v",
   3: "_v",
   4: "bft",
   5: "v",
   6: "acfmtu",
-  7: "v"
+  7: "bcdfilprstv"
 };
 
 var indexSectionNames =

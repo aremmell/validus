@@ -25,6 +25,16 @@
 var NAVTREE =
 [
   [ "Validus", "index.html", [
+    [ "<a class=\"anchor\" id=\"intro\"></a> Intro", "index.html#a-idintro--intro", null ],
+    [ "<a class=\"anchor\" id=\"tldr\"></a> TLDR", "index.html#a-idtldr--tldr", null ],
+    [ "<a class=\"anchor\" id=\"disclaimer\"></a> Disclaimer", "index.html#a-iddisclaimer--disclaimer", null ],
+    [ "<a class=\"anchor\" id=\"building-from-source\"></a> Building from source", "index.html#a-idbuilding-from-source--building-from-source", [
+      [ "<a class=\"anchor\" id=\"build-products\"></a> Build products", "index.html#a-idbuild-products--build-products", null ]
+    ] ],
+    [ "<a class=\"anchor\" id=\"cli-interface\"></a> CLI interface", "index.html#a-idcli-interface--cli-interface", null ],
+    [ "<a class=\"anchor\" id=\"full-documentation\"></a> Full Documentation", "index.html#a-idfull-documentation--full-documentation", null ],
+    [ "<a class=\"anchor\" id=\"releases\"></a> Releases", "index.html#a-idreleases--releases", null ],
+    [ "<a class=\"anchor\" id=\"latin\"></a> Latin", "index.html#a-idlatin--latin", null ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
@@ -42,5 +52,6 @@ var NAVTREEINDEX =
 "files.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';

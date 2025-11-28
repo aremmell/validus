@@ -5,7 +5,7 @@
  * Defines the functions utilized by the Validus CLI application.
  *
  * @author    Ryan M. Lederman \<lederman@gmail.com\>
- * @date      2004-2023
+ * @date      2004-2025
  * @version   1.0.4
  * @copyright The MIT License (MIT)
  *
