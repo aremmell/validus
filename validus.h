@@ -57,6 +57,7 @@
 #  if defined(_BIG_ENDIAN)
 #   define BYTE_ORDER BIG_ENDIAN
 #  elif defined(_LITTLE_ENDIAN)
+#   define BYTE_ORDER LITTLE_ENDIAN
 #  else
 #   error "failed to determine endian-ness of this Sun system."
 #  endif
