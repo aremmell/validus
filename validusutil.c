@@ -156,22 +156,26 @@ double validus_timer_elapsed(const validus_timer* timer)
 
 const char* validus_get_local_time(void)
 {
-    char buf[256] = {0};
-    memset(buf, 0, sizeof(buf));
-
+    static _Thread_local char buf[256] = {0};
     time_t now = time(NULL);
     struct tm lt = {0};
+    bool lt_ret = true;
+
 # if defined(_WIN32)
-    errno_t err = localtime_s(&lt, &now);
-    if (0 != err) {
+    errno_t ret = localtime_s(&lt, &now);
+    if (0 != ret) {
+        lt_ret = false;
         fprintf(stderr, "localtime_s() failed: %d\n", errno);
-        return "";
     }
 #else
-    (void)localtime_r(&now, &lt);
+    struct tm* ret = localtime_r(&now, &lt);
+    if (NULL == ret) {
+        lt_ret = false;
+        fprintf(stderr, "localtime_r() failed: %d\n", errno);
+    }
 #endif
 
-    if (0 != strftime(buf, sizeof(buf), "%T", &lt))
+    if (lt_ret && 0 != strftime(buf, sizeof(buf), "%T", &lt))
         return &buf[0];
 
     return "";
