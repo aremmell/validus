@@ -118,6 +118,7 @@ void validus_timer_start(validus_timer* timer)
     int ret = clock_gettime(CLOCK_REALTIME, &timer->ts);
     if (0 != ret) {
         fprintf(stderr, "clock_gettime() failed: %d\n", errno);
+        timer->ts.tv_sec = 0;
         timer->ts.tv_nsec = 0;
     }
 #else /* __WIN__ */
