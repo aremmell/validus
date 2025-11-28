@@ -7,6 +7,5 @@ var searchData=
   ['f4_4',['f4',['../structvalidus__state.html#a2cd902c6f49f679619b34d44f74bc98b',1,'validus_state']]],
   ['f5_5',['f5',['../structvalidus__state.html#a158789250216e157763b272c3397285c',1,'validus_state']]],
   ['from_20source_6',['&lt;a class=&quot;anchor&quot; id=&quot;building-from-source&quot;&gt;&lt;/a&gt; Building from source',['../index.html#a-idbuilding-from-source--building-from-source',1,'']]],
-  ['full_20documentation_7',['&lt;a class=&quot;anchor&quot; id=&quot;full-documentation&quot;&gt;&lt;/a&gt; Full Documentation',['../index.html#a-idfull-documentation--full-documentation',1,'']]],
-  ['functions_20and_20types_8',['Functions and Types',['../group__corefuncs.html',1,'']]]
+  ['functions_20and_20types_7',['Functions and Types',['../group__corefuncs.html',1,'']]]
 ];

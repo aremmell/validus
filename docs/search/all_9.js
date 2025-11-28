@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['octetswap_0',['OCTETSWAP',['../group__coremacros.html#ga862cc9d25e05393d25456048ff8038bc',1,'validus.h']]]
+  ['products_0',['&lt;a class=&quot;anchor&quot; id=&quot;build-products&quot;&gt;&lt;/a&gt; Build products',['../index.html#a-idbuild-products--build-products',1,'']]]
 ];
