@@ -6,3 +6,9 @@ build/
 
 # Annoying macOS files
 .DS_Store
+
+# clangd
+.cache/
+
+# PVS-Studio
+.PVS-Studio/
