@@ -78,7 +78,8 @@
 #  endif
 # endif
 
-# if defined(__WIN__)
+# if defined(_WIN32)
+#  define __WIN__
 #  define BYTE_ORDER LITTLE_ENDIAN
 # endif
 
